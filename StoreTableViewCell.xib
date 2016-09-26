@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="16A313a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" restorationIdentifier="Store" selectionStyle="default" indentationWidth="10" rowHeight="135" id="KGk-i7-Jjw" customClass="StoreTableViewCell" customModule="FoodTalk" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="344" height="135"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="344" height="134"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Asset 1mdp.png" translatesAutoresizingMaskIntoConstraints="NO" id="vM9-M1-B3q">
+                        <rect key="frame" x="9" y="4" width="128" height="128"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="vM9-M1-B3q" secondAttribute="height" multiplier="137:128" constant="-9" id="0qq-LL-10h"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gj6-3h-X2F">
+                        <rect key="frame" x="153" y="8" width="183" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="RvI-k7-SKo"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sAW-oF-9uq">
+                        <rect key="frame" x="153" y="28" width="183" height="29"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="29" id="FZb-py-CqF"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Ue-aq-3SR">
+                        <rect key="frame" x="153" y="56" width="183" height="42"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="42" id="1WG-cL-5sJ"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9J-MT-xjK">
+                        <rect key="frame" x="153" y="105" width="66" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="XxD-Zi-BSA"/>
+                            <constraint firstAttribute="width" constant="66" id="vhk-GV-bjp"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                        <color key="textColor" red="0.30980392159999998" green="0.74117647060000003" blue="0.10980392160000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUb-k7-lwc">
+                        <rect key="frame" x="251" y="103" width="72" height="26"/>
+                        <color key="backgroundColor" red="0.28727400349999999" green="0.48715594020000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="26" id="4ZB-23-1tH"/>
+                            <constraint firstAttribute="width" constant="72" id="RQI-Fq-KlY"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
+                        <state key="normal" title="BOOK NOW">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="5Ue-aq-3SR" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="3fL-xc-G2w"/>
+                    <constraint firstItem="sAW-oF-9uq" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="OJH-P1-7t5"/>
+                    <constraint firstItem="gj6-3h-X2F" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="TkK-WP-Q8t"/>
+                    <constraint firstItem="5Ue-aq-3SR" firstAttribute="top" secondItem="sAW-oF-9uq" secondAttribute="bottom" constant="-1" id="VgT-PY-eaY"/>
+                    <constraint firstItem="gj6-3h-X2F" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="X1p-Je-5Qz"/>
+                    <constraint firstItem="sAW-oF-9uq" firstAttribute="leading" secondItem="vM9-M1-B3q" secondAttribute="trailing" constant="16" id="aRJ-01-s0x"/>
+                    <constraint firstItem="g9J-MT-xjK" firstAttribute="leading" secondItem="vM9-M1-B3q" secondAttribute="trailing" constant="16" id="cXx-E7-qb2"/>
+                    <constraint firstItem="vM9-M1-B3q" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-4" id="e1M-2p-9sZ"/>
+                    <constraint firstItem="5Ue-aq-3SR" firstAttribute="leading" secondItem="vM9-M1-B3q" secondAttribute="trailing" constant="16" id="eMo-12-LV7"/>
+                    <constraint firstItem="sAW-oF-9uq" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="20" id="hmu-tH-fSj"/>
+                    <constraint firstItem="gj6-3h-X2F" firstAttribute="leading" secondItem="vM9-M1-B3q" secondAttribute="trailing" constant="16" id="iHC-ld-gIG"/>
+                    <constraint firstItem="g9J-MT-xjK" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="kUl-F2-pLL"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="vM9-M1-B3q" secondAttribute="bottom" constant="-6" id="lRT-B3-cdF"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="wUb-k7-lwc" secondAttribute="trailing" constant="13" id="mey-e4-ONt"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="wUb-k7-lwc" secondAttribute="bottom" constant="-3" id="ogk-G8-RP9"/>
+                    <constraint firstItem="vM9-M1-B3q" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="1" id="zPJ-W2-Owe"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="btnBookNow" destination="wUb-k7-lwc" id="z49-Eq-I3s"/>
+                <outlet property="imgStore" destination="vM9-M1-B3q" id="56b-jT-Yfe"/>
+                <outlet property="lblDescription1" destination="sAW-oF-9uq" id="jog-dP-hit"/>
+                <outlet property="lblDescription2" destination="5Ue-aq-3SR" id="OWT-SU-cBc"/>
+                <outlet property="lblPoints" destination="g9J-MT-xjK" id="tyM-SS-S6M"/>
+                <outlet property="lblRestaurant" destination="gj6-3h-X2F" id="Xyj-rH-1ad"/>
+            </connections>
+            <point key="canvasLocation" x="258" y="400.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Asset 1mdp.png" width="334" height="335"/>
+    </resources>
+</document>
