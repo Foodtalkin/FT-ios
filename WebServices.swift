@@ -195,6 +195,8 @@ func internetMsg(view : UIView){
     lblMsg.numberOfLines = 2
     conectivityMsg.addSubview(lblMsg)
     
+    conectivityMsg.tag = 10990
+    
     view.addSubview(conectivityMsg)
 }
 

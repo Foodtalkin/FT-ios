@@ -417,13 +417,25 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
             var status = ""
             var lengthRestaurantname = 0
             lengthRestaurantname = (arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String).characters.count
+            var lengthRegion = 0
+            lengthRegion = (arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String).characters.count
             if(arrPostList.count > 0){
                 if(lengthRestaurantname > 1){
+                    if(lengthRegion > 1){
         status = String(format: "%@ is having %@ at %@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String)
+                    }
+                    else{
+                        status = String(format: "%@ is having %@ at %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String)
+                    }
                 }
                 
                 if(lengthRestaurantname < 1){
+                    if(lengthRegion > 1){
                     status = String(format: "%@ is having %@ %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String)
+                    }
+                    else{
+                       status = String(format: "%@ is having %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String) 
+                    }
                 }
         cell.labelStatus?.text = status
             }
@@ -1733,7 +1745,7 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
     }
     
     func serviceFailedWitherror(error : NSError){
-        internetMsg(self.view)
+      //  internetMsg(self.view)
     }
     
     func serviceUploadProgress(myprogress : float_t){
@@ -1806,50 +1818,98 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touch = touches.first {
-            let currentPoint = touch.locationInView(conectivityMsg)
-            // do something with your currentPoint
-            if(isConnectedToNetwork()){
-                conectivityMsg.removeFromSuperview()
-            self.tabBarController?.tabBar.userInteractionEnabled = true
-            showLoader(self.view)
-            
-            
-            if(isConnectedToNetwork()){
+      
+//            let currentPoint = touch.locationInView(conectivityMsg)
+//            // do something with your currentPoint
+//            if(isConnectedToNetwork()){
+//                conectivityMsg.removeFromSuperview()
+//            self.tabBarController?.tabBar.userInteractionEnabled = true
+//            showLoader(self.view)
+//            
+//            
+//            if(isConnectedToNetwork()){
+//                
+//                dispatch_async(dispatch_get_main_queue()) {
+//                    self.webServiceForDishDetails()
+//                }
+//            }else{
+//                internetMsg(self.view)
+//                stopLoading(self.view)
+//                self.tabBarController?.tabBar.userInteractionEnabled = true
+//            }
+//            
+//            dispatch_async(dispatch_get_main_queue()) {
+//                self.performSelector(#selector(Home.webServiceCallRating), withObject: nil, afterDelay: 0.1)
+//            }
+//            
+//            if(isConnectedToNetwork()){
+//                
+//                self.arrPostList = NSMutableArray()
+//                self.arrLikeList = NSMutableArray()
+//                self.arrFavList = NSMutableArray()
+//                self.pageList = 1
+//                dispatch_async(dispatch_get_main_queue()) {
+//                    self.webServiceCall()
+//                }
+//                if (isConnectedToNetwork()){
+//               //     updateCall()
+//                }
+//            }else{
+//                internetMsg(self.view)
+//                self.tabBarController?.tabBar.userInteractionEnabled = true
+//            }
+//            }
+//            else{
+//                internetMsg(self.view)
+//                self.tabBarController?.tabBar.userInteractionEnabled = true
+//            }
+        
+        
+        for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                            if(isConnectedToNetwork()){
+                                conectivityMsg.removeFromSuperview()
+                            self.tabBarController?.tabBar.userInteractionEnabled = true
+                            showLoader(self.view)
                 
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.webServiceForDishDetails()
-                }
-            }else{
-                internetMsg(self.view)
-                stopLoading(self.view)
-                self.tabBarController?.tabBar.userInteractionEnabled = true
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                self.performSelector(#selector(Home.webServiceCallRating), withObject: nil, afterDelay: 0.1)
-            }
-            
-            if(isConnectedToNetwork()){
                 
-                self.arrPostList = NSMutableArray()
-                self.arrLikeList = NSMutableArray()
-                self.arrFavList = NSMutableArray()
-                self.pageList = 1
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.webServiceCall()
-                }
-                if (isConnectedToNetwork()){
-               //     updateCall()
-                }
-            }else{
-                internetMsg(self.view)
-                self.tabBarController?.tabBar.userInteractionEnabled = true
-            }
-            }
-            else{
-                internetMsg(self.view)
-                self.tabBarController?.tabBar.userInteractionEnabled = true
+                            if(isConnectedToNetwork()){
+                
+                                dispatch_async(dispatch_get_main_queue()) {
+                                    self.webServiceForDishDetails()
+                                }
+                            }else{
+                                internetMsg(self.view)
+                                stopLoading(self.view)
+                                self.tabBarController?.tabBar.userInteractionEnabled = true
+                            }
+                
+                            dispatch_async(dispatch_get_main_queue()) {
+                                self.performSelector(#selector(Home.webServiceCallRating), withObject: nil, afterDelay: 0.1)
+                            }
+                
+                            if(isConnectedToNetwork()){
+                
+                                self.arrPostList = NSMutableArray()
+                                self.arrLikeList = NSMutableArray()
+                                self.arrFavList = NSMutableArray()
+                                self.pageList = 1
+                                dispatch_async(dispatch_get_main_queue()) {
+                                    self.webServiceCall()
+                                }
+                                if (isConnectedToNetwork()){
+                               //     updateCall()
+                                }
+                            }else{
+                                internetMsg(self.view)
+                                self.tabBarController?.tabBar.userInteractionEnabled = true
+                            }
+                            }
+                            else{
+                                internetMsg(self.view)
+                                self.tabBarController?.tabBar.userInteractionEnabled = true
+                            }
+
             }
         }
     }

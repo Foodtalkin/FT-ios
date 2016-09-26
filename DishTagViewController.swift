@@ -52,18 +52,11 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
     override func viewWillDisappear(animated : Bool) {
         super.viewWillDisappear(animated)
         
-        if (self.isMovingFromParentViewController()){
-//            self.navigationController?.navigationBarHidden = true
-//            for controller in self.navigationController!.viewControllers as Array {
-////                if controller.isKindOfClass(XMCCameraViewController) {
-////                    self.navigationController?.popToViewController(((self.navigationController?.viewControllers)! as NSArray).objectAtIndex(1) as! UIViewController, animated: true)
-////                    break
-////                }
-//            }
+        if (self.isMovingToParentViewController()){
+            
             isComingFromDishTag = true
-         //   selectedRestaurantName = ""
+            selectedRestaurantName = ""
             restaurantId = ""
-            self.navigationController?.popViewControllerAnimated(true)
         }
     }
     

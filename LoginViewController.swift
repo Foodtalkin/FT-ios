@@ -197,9 +197,10 @@ class LoginViewController: UIViewController, UIScrollViewDelegate, WebServiceCal
         if((FBSDKAccessToken.currentAccessToken()) != nil){
             FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name, first_name, last_name, picture.type(large), email,gender,friends"]).startWithCompletionHandler({ (connection, result, error) -> Void in
                 if (error == nil){
-                    
+                    print(result)
                     self.dict = result as? NSDictionary
                     print("fb details = ",self.dict)
+                    NSUserDefaults.standardUserDefaults().setObject(result, forKey: "FacebookDetails")
                     if((self.dict?.objectForKey("friends")) != nil){
                         if((((self.dict?.objectForKey( "friends"))! as! NSDictionary).objectForKey("data") as! NSArray).count > 0){
                             arrayFacebookFriends = ((self.dict?.objectForKey("friends"))! as! NSDictionary).objectForKey("data")?.mutableCopy() as! NSMutableArray

@@ -54,8 +54,8 @@ public class CameraViewController: UIViewController {
     var onCompletion: CameraViewCompletion?
     var volumeControl: VolumeControl?
     
-    var animationDuration: NSTimeInterval = 0.5
-    var animationSpring: CGFloat = 0.5
+    var animationDuration: NSTimeInterval = 0.2
+    var animationSpring: CGFloat = 0.2
     var rotateAnimation: UIViewAnimationOptions = .CurveLinear
     
     var cameraButtonEdgeConstraint: NSLayoutConstraint?
@@ -399,7 +399,7 @@ public class CameraViewController: UIViewController {
          * Dispach delay to avoid any conflict between the CATransaction of rotation of the screen
          * and CATransaction of animation of buttons.
          */
-        let time = dispatch_time(dispatch_time_t(DISPATCH_TIME_NOW), 1 * Int64(NSEC_PER_SEC)/10)
+        let time = dispatch_time(dispatch_time_t(DISPATCH_TIME_NOW), 1 * Int64(NSEC_PER_SEC)/20)
         dispatch_after(time, dispatch_get_main_queue()) {
             
             CATransaction.begin()
@@ -408,7 +408,7 @@ public class CameraViewController: UIViewController {
             
             UIView.animateWithDuration(
                 self.animationDuration,
-                delay: 0.1,
+                delay: 0.0,
                 usingSpringWithDamping: self.animationSpring,
                 initialSpringVelocity: 0,
                 options: self.rotateAnimation,

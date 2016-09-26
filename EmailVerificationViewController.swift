@@ -29,6 +29,7 @@ class EmailVerificationViewController: UIViewController, UITextFieldDelegate, We
         txtEmail.keyboardType = UIKeyboardType.EmailAddress
         txtEmail.delegate = self
         let dictName = (NSUserDefaults.standardUserDefaults().objectForKey("AllLogindetails") as? NSMutableDictionary)!
+        print(dictName)
         let fullname = dictName.objectForKey("fullName")
         var token = (fullname! as! String).componentsSeparatedByString(" ")
         let firstname = token[0]
@@ -85,7 +86,7 @@ class EmailVerificationViewController: UIViewController, UITextFieldDelegate, We
         txtEmail.frame = CGRect(x: 36, y: 169, width: self.view.frame.size.width - 36, height: 30)
         txtEmail.attributedPlaceholder = NSAttributedString(string:"Your email",
                                                             attributes:[NSForegroundColorAttributeName: UIColor.whiteColor()])
-        let dictName = (NSUserDefaults.standardUserDefaults().objectForKey("AllLogindetails") as? NSMutableDictionary)!
+        let dictName = (NSUserDefaults.standardUserDefaults().objectForKey("FacebookDetails") as? NSMutableDictionary)!
         if((dictName.objectForKey("email")) != nil){
             txtEmail.text = dictName.objectForKey("email") as? String
             btnSubmit?.enabled = true

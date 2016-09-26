@@ -235,7 +235,7 @@ class StoreViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func bookEvent(_ sender : UIButton){
         if((storeArray.objectAtIndex(sender.tag) as! NSDictionary).objectForKey("iRedeemed") as! String == "0"){
-        if(scorePoints > ((self.storeArray.objectAtIndex(sender.tag) as! NSDictionary).objectForKey("points") as! Float)){
+        if(scorePoints > ((self.storeArray.objectAtIndex(sender.tag) as! NSDictionary).objectForKey("points")?.floatValue)){
             Flurry.logEvent("Redeem button tapped")
         adId = (storeArray.objectAtIndex(sender.tag) as! NSDictionary).objectForKey("id") as! String
        

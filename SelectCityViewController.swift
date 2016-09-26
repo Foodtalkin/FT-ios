@@ -229,8 +229,8 @@ class SelectCityViewController: UIViewController, UITextFieldDelegate,  UITableV
     }
     
     func serviceFailedWitherror(_ error : NSError){
-        internetMsg(self.view)
-        stopLoading(self.view)
+     //   internetMsg(self.view)
+    //    stopLoading(self.view)
     }
     
     func serviceUploadProgress(_ myprogress : float_t){

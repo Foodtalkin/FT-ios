@@ -115,7 +115,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         searchBar.text = ""
         if(isComingFromDishTag == true){
             loaderView.hidden = true
-            self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.0)
+            openPost()
             callInt = 0
             self.restaurantDetails = NSMutableArray()
             self.restaurentNameList = NSMutableArray()
