@@ -198,17 +198,19 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
             }
             if(isImageClicked == false){
                 loaderView.hidden = false
-                callInt = 0
+                
                 self.restaurantDetails = NSMutableArray()
                 self.restaurentNameList = NSMutableArray()
-                addLocationManager()
                 self.openPost()
                 
             }
             else{
-                if(restaurentNameList.count > 0){
-                    loaderView.hidden = true
-                }
+              //  if(restaurentNameList.count > 0){
+                  //  loaderView.hidden = true
+                    callInt = 0
+                    addLocationManager()
+
+           //     }
             }
             
             
@@ -239,7 +241,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     }
     
     //MARK:- refresh Screen
-    func refresh(_ sender:AnyObject)
+    func refresh(sender:AnyObject)
     {
         searchActive = false
         searchBar.text = ""
@@ -384,7 +386,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         presentViewController(cameraViewController, animated: true, completion: nil)
     }
     
-    func resizeImage(_ image : UIImage) -> UIImage
+    func resizeImage(image : UIImage) -> UIImage
     {
         var actualHeight = image.size.height as CGFloat;
         var actualWidth = image.size.width as CGFloat;
@@ -430,7 +432,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     }
 
     
-    func doubleTabMethod(_ sender : UITapGestureRecognizer){
+    func doubleTabMethod(sender : UITapGestureRecognizer){
         
         if(searchActive){
             restaurantId = filtered.objectAtIndex((sender.view?.tag)!).objectForKey("id") as! String

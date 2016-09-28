@@ -148,22 +148,24 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
         
     }
     
-    func webSearchService(_ timer : NSTimer){
+    func webSearchService(timer : NSTimer){
         if (isConnectedToNetwork()){
             //  showLoader(self.view)
             let searchText = timer.userInfo as! String
-            let escapedAddress = searchText.stringByRemovingPercentEncoding
-            self.webServiceCalling(escapedAddress!)
+            let escapedAddress  = searchText.stringByAddingPercentEncodingWithAllowedCharacters( NSCharacterSet.URLQueryAllowedCharacterSet())!
+            self.webServiceCalling(escapedAddress)
         }
         else{
             internetMsg(self.view)
         }
     }
     
-    func webServiceCalling(_ text : String){
+    func webServiceCalling(text : String){
         if (isConnectedToNetwork()){
             let urlString = String(format: "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=%@&types=(cities)&key=AIzaSyCkhfzw_JLdFtJkwkHEUNBtsHm_GRNF59Y",text)
+             dispatch_async(dispatch_get_main_queue()){
             webServiceGet(urlString)
+            }
            
       delegate = self
         }

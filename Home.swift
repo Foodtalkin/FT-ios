@@ -1738,7 +1738,7 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
          
             self.performSelector(#selector(Home.removeDubleTapImage), withObject: nil, afterDelay: 1.0)
         }
-         postTableView?.reloadData()
+    //     postTableView?.reloadData()
          hideProcessLoader(self.view)
          self.refreshControl.endRefreshing()
         self.tabBarController?.tabBar.userInteractionEnabled = true
@@ -1819,51 +1819,6 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
       
-//            let currentPoint = touch.locationInView(conectivityMsg)
-//            // do something with your currentPoint
-//            if(isConnectedToNetwork()){
-//                conectivityMsg.removeFromSuperview()
-//            self.tabBarController?.tabBar.userInteractionEnabled = true
-//            showLoader(self.view)
-//            
-//            
-//            if(isConnectedToNetwork()){
-//                
-//                dispatch_async(dispatch_get_main_queue()) {
-//                    self.webServiceForDishDetails()
-//                }
-//            }else{
-//                internetMsg(self.view)
-//                stopLoading(self.view)
-//                self.tabBarController?.tabBar.userInteractionEnabled = true
-//            }
-//            
-//            dispatch_async(dispatch_get_main_queue()) {
-//                self.performSelector(#selector(Home.webServiceCallRating), withObject: nil, afterDelay: 0.1)
-//            }
-//            
-//            if(isConnectedToNetwork()){
-//                
-//                self.arrPostList = NSMutableArray()
-//                self.arrLikeList = NSMutableArray()
-//                self.arrFavList = NSMutableArray()
-//                self.pageList = 1
-//                dispatch_async(dispatch_get_main_queue()) {
-//                    self.webServiceCall()
-//                }
-//                if (isConnectedToNetwork()){
-//               //     updateCall()
-//                }
-//            }else{
-//                internetMsg(self.view)
-//                self.tabBarController?.tabBar.userInteractionEnabled = true
-//            }
-//            }
-//            else{
-//                internetMsg(self.view)
-//                self.tabBarController?.tabBar.userInteractionEnabled = true
-//            }
-        
         
         for var view : UIView in self.view.subviews {
             if(view == conectivityMsg){

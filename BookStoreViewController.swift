@@ -38,6 +38,7 @@ class BookStoreViewController: UIViewController, UITableViewDataSource, UITableV
         lblPlaceHolder.textAlignment = NSTextAlignment.Center
         lblPlaceHolder.text = "No event has been booked :("
         lblPlaceHolder.textColor = UIColor.blackColor()
+        lblPlaceHolder.font = UIFont(name: fontBold, size: 15)
         self.view.addSubview(lblPlaceHolder)
         lblPlaceHolder.hidden = true
     }
@@ -62,7 +63,7 @@ class BookStoreViewController: UIViewController, UITableViewDataSource, UITableV
     
     //MARK:- WebService Delegates
     
-    func getDataFromWebService(_ dict : NSMutableDictionary){
+    func getDataFromWebService(dict : NSMutableDictionary){
         
         if(dict.objectForKey("api") as! String == "adwords/redeedmed"){
             if((dict.objectForKey("status")! as! String).isEqual("OK")){

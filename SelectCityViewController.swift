@@ -173,8 +173,8 @@ class SelectCityViewController: UIViewController, UITextFieldDelegate,  UITableV
     func webSearchService(_ timer : NSTimer){
          if (isConnectedToNetwork()){
         let searchText = timer.userInfo as! String
-        let escapedAddress = searchText.stringByRemovingPercentEncoding
-        self.webServiceCalling(escapedAddress!)
+        let escapedAddress = searchText.stringByAddingPercentEncodingWithAllowedCharacters( NSCharacterSet.URLQueryAllowedCharacterSet())!
+        self.webServiceCalling(escapedAddress)
         }
          else{
             internetMsg(self.view)

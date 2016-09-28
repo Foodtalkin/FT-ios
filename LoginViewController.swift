@@ -315,11 +315,11 @@ class LoginViewController: UIViewController, UIScrollViewDelegate, WebServiceCal
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(searchScreen, animated:true);
             }
             else{
-                let region = infoDict.objectForKey("profile")?.objectForKey("region") as? String
+                let region = infoDict.objectForKey("profile")?.objectForKey("cityName") as? String
                 selectedCity = region!
                 NSUserDefaults.standardUserDefaults().setObject(selectedCity, forKey: "citySelected")
                 let currentInstallation = PFInstallation.currentInstallation()
-                currentInstallation.setObject(region!, forKey: "region")
+                currentInstallation.setObject(region!, forKey: "cityName")
                 currentInstallation.saveInBackground()
                 
                 let username = infoDict.objectForKey("userName")

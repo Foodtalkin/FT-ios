@@ -14,6 +14,7 @@ public typealias CameraViewCompletion = (UIImage?, PHAsset?) -> Void
 
 var isCameraCancel : Bool = false
 
+
 public extension CameraViewController {
     public class func imagePickerViewController(croppingEnabled: Bool, completion: CameraViewCompletion) -> UINavigationController {
         let imagePicker = PhotoLibraryViewController()
@@ -54,8 +55,8 @@ public class CameraViewController: UIViewController {
     var onCompletion: CameraViewCompletion?
     var volumeControl: VolumeControl?
     
-    var animationDuration: NSTimeInterval = 0.2
-    var animationSpring: CGFloat = 0.2
+    var animationDuration: NSTimeInterval = 0.5
+    var animationSpring: CGFloat = 0.5
     var rotateAnimation: UIViewAnimationOptions = .CurveLinear
     
     var cameraButtonEdgeConstraint: NSLayoutConstraint?
@@ -83,6 +84,8 @@ public class CameraViewController: UIViewController {
     var cameraOverlayEdgeTwoConstraint: NSLayoutConstraint?
     var cameraOverlayWidthConstraint: NSLayoutConstraint?
     var cameraOverlayCenterConstraint: NSLayoutConstraint?
+    
+    public var onComplete: CameraViewCompletion?
     
     let cameraView : CameraView = {
         let cameraView = CameraView()
@@ -376,8 +379,11 @@ public class CameraViewController: UIViewController {
     }
     
     func close1(){
+       
+        self.cameraView.stopSession()
         isCameraCancel = true
         self.dismissViewControllerAnimated(true, completion: nil)
+       
     }
     
     /**
@@ -399,7 +405,7 @@ public class CameraViewController: UIViewController {
          * Dispach delay to avoid any conflict between the CATransaction of rotation of the screen
          * and CATransaction of animation of buttons.
          */
-        let time = dispatch_time(dispatch_time_t(DISPATCH_TIME_NOW), 1 * Int64(NSEC_PER_SEC)/20)
+        let time = dispatch_time(dispatch_time_t(DISPATCH_TIME_NOW), 1 * Int64(NSEC_PER_SEC)/10)
         dispatch_after(time, dispatch_get_main_queue()) {
             
             CATransaction.begin()

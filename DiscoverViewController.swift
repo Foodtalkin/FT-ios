@@ -112,7 +112,7 @@ class DiscoverViewController: UIViewController, iCarouselDataSource, iCarouselDe
         carousel.pagingEnabled = true
         carousel.scrollSpeed = 1.0
         
-        //       self.title = "Discover"
+               self.title = "Nearby"
         
         
         let button: UIButton = UIButton(type: UIButtonType.Custom)
@@ -123,10 +123,6 @@ class DiscoverViewController: UIViewController, iCarouselDataSource, iCarouselDe
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.rightBarButtonItem = barButton
         barButton.enabled = false
-         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(DiscoverViewController.handleTap(_:)))
-        tap.delegate = self
-        self.view.addGestureRecognizer(tap)
         
     }
 
@@ -1304,16 +1300,21 @@ class DiscoverViewController: UIViewController, iCarouselDataSource, iCarouselDe
         self.navigationController?.popToRootViewControllerAnimated(false)
     }
     
-    func handleTap(sender: UITapGestureRecognizer? = nil) {
-        if(sender?.view != carousel){
-            if(isConnectedToNetwork()){
-                conectivityMsg.removeFromSuperview()
-                callInt = 0
-                self.addLocationManager()
-            }
-        }
-    }
     
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        
+        
+        for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                if(isConnectedToNetwork()){
+                    conectivityMsg.removeFromSuperview()
+                    callInt = 0
+                    self.addLocationManager()
+                }
+            }
+      }
+    }
 
 
 

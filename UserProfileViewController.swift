@@ -231,7 +231,7 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             }
             else{
                 if(dictProfileInfo.count > 0){
-                    cell.username?.text = String(format: "%@ | %@", (dictProfileInfo.objectForKey("fullName") as? String)!, (dictProfileInfo.objectForKey("region") as? String)!)
+                    cell.username?.text = String(format: "%@ | %@", (dictProfileInfo.objectForKey("fullName") as? String)!, (dictProfileInfo.objectForKey("cityName") as? String)!)
                     //   self.title = dictProfileInfo.objectForKey("userName") as? String
                     navTitleLabel.text = dictProfileInfo.objectForKey("userName") as? String
                     dispatch_async(dispatch_get_main_queue()) {
