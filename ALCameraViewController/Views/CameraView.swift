@@ -24,7 +24,6 @@ public class CameraView: UIView {
     public var currentPosition = AVCaptureDevicePosition.Back
     
     public func startSession() {
-        
         dispatch_async(cameraQueue) {
             self.createSession()
             self.session?.startRunning()
@@ -106,7 +105,6 @@ public class CameraView: UIView {
     private func createSession() {
         session = AVCaptureSession()
         session.sessionPreset = AVCaptureSessionPresetPhoto
-        
         dispatch_async(dispatch_get_main_queue()) {
             self.createPreview()
         }

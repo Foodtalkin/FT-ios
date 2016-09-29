@@ -12,8 +12,7 @@ import Photos
 
 public typealias CameraViewCompletion = (UIImage?, PHAsset?) -> Void
 
-var isCameraCancel : Bool = false
-
+var isCameraCancel : Bool? = false
 
 public extension CameraViewController {
     public class func imagePickerViewController(croppingEnabled: Bool, completion: CameraViewCompletion) -> UINavigationController {
@@ -84,8 +83,6 @@ public class CameraViewController: UIViewController {
     var cameraOverlayEdgeTwoConstraint: NSLayoutConstraint?
     var cameraOverlayWidthConstraint: NSLayoutConstraint?
     var cameraOverlayCenterConstraint: NSLayoutConstraint?
-    
-    public var onComplete: CameraViewCompletion?
     
     let cameraView : CameraView = {
         let cameraView = CameraView()
@@ -359,7 +356,7 @@ public class CameraViewController: UIViewController {
         cameraButton.action = { [weak self] in self?.capturePhoto() }
       //  swapButton.action = { [weak self] in self?.swapCamera() }
         libraryButton.action = { [weak self] in self?.showLibrary() }
-        closeButton.action = { [weak self] in self?.close1() }
+        closeButton.action = { [weak self] in self?.close() }
         flashButton.action = { [weak self] in self?.toggleFlash() }
     }
     
@@ -376,14 +373,6 @@ public class CameraViewController: UIViewController {
     
     func rotateCameraView() {
         cameraView.rotatePreview()
-    }
-    
-    func close1(){
-       
-        self.cameraView.stopSession()
-        isCameraCancel = true
-        self.dismissViewControllerAnimated(true, completion: nil)
-       
     }
     
     /**
@@ -414,7 +403,7 @@ public class CameraViewController: UIViewController {
             
             UIView.animateWithDuration(
                 self.animationDuration,
-                delay: 0.0,
+                delay: 0.1,
                 usingSpringWithDamping: self.animationSpring,
                 initialSpringVelocity: 0,
                 options: self.rotateAnimation,
@@ -510,6 +499,8 @@ public class CameraViewController: UIViewController {
     }
     
     internal func close() {
+        isCameraCancel = true
+        cameraView.stopSession()
        self.dismissViewControllerAnimated(true, completion: nil)
     }
     

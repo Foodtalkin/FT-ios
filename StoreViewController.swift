@@ -243,7 +243,7 @@ class StoreViewController: UIViewController, UITableViewDelegate, UITableViewDat
             
             let alertController = UIAlertController(title: "", message: "", preferredStyle: .Alert)
             let attrubuted = NSMutableAttributedString(string: "Are you sure, you want to buy?")
-            attrubuted.addAttribute(NSFontAttributeName, value: UIFont(name: fontBold, size: 17)!, range: NSMakeRange(0, 14))
+            attrubuted.addAttribute(NSFontAttributeName, value: UIFont(name: fontBold, size: 17)!, range: NSMakeRange(0, 30))
             alertController.setValue(attrubuted, forKey: "attributedTitle")
             
             // Create the actions
