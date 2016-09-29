@@ -1297,7 +1297,7 @@ class DiscoverViewController: UIViewController, iCarouselDataSource, iCarouselDe
             locationVal = NSMutableDictionary()
             carousel.reloadData()
         }
-        self.navigationController?.popToRootViewControllerAnimated(false)
+        self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     

@@ -8,13 +8,15 @@
 
 import UIKit
 import CoreLocation
+import AVFoundation
 
 var restaurantId = String()
 var selectedRestaurantName = String()
 var isRatedLater : Bool = false
 var imageSelected = UIImage()
+var isCameraCancel : Bool = false
 
-class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate,  UIGestureRecognizerDelegate, FloatRatingViewDelegate, UITabBarControllerDelegate, CLLocationManagerDelegate, TTTAttributedLabelDelegate, WebServiceCallingDelegate {
+class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate,  UIGestureRecognizerDelegate, FloatRatingViewDelegate, UITabBarControllerDelegate, CLLocationManagerDelegate, TTTAttributedLabelDelegate, WebServiceCallingDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet var tableView : UITableView?
     @IBOutlet var btnAddRestaurant : UIButton?
@@ -49,6 +51,11 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     var btnSettings = UIButton()
     var isImageClicked : Bool = false
     
+    let captureSession = AVCaptureSession()
+    let stillImageOutput = AVCaptureStillImageOutput()
+    var error: NSError?
+    var imagePicker1 = UIImagePickerController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,7 +69,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         self.tabBarController?.tabBar.hidden = true
         self.tabBarController?.tabBar.translucent = true
         self.view.bringSubviewToFront(btnAddRestaurant!)
-        
+        self.tabBarController?.delegate = self
         
         
         searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
@@ -106,7 +113,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         //
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Skip", style: .Plain, target: self, action: #selector(CheckInViewController.addTapped))
 
-        
+        self.tabBarController?.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -114,6 +121,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         self.refreshControl.endRefreshing()
         searchBar.text = ""
         if(isComingFromDishTag == true){
+         //   imagePicker.removeFromParentViewController()
             loaderView.hidden = true
             self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.5)
             callInt = 0
@@ -212,7 +220,6 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
 
            //     }
             }
-            
             
         }
         
@@ -377,13 +384,131 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     
     //MARK:- SkipButtonMethod
     func openPost(){
-        
-        let cameraViewController = CameraViewController(croppingEnabled: true, allowsLibraryAccess: true) { [weak self] image, asset in
-            imageSelected = self!.resizeImage(image!)
-            self!.isImageClicked = true
-            self?.dismissViewControllerAnimated(true, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera;
+            
+               imagePicker.allowsEditing = true
+            imagePicker.showsCameraControls = true
+            
+            addOnImagePicker(imagePicker)
+      //      self.present(imagePicker, animated: true, completion: nil)
+            self.presentViewController(imagePicker, animated: true, completion: nil)
         }
-        presentViewController(cameraViewController, animated: true, completion: nil)
+    }
+    
+    @IBAction func openPhotoLibraryButton(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            imagePicker.allowsEditing = true
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+            
+        }
+    }
+    
+    func addOnImagePicker(imagePicker : UIImagePickerController){
+        let viewBlack = UIView()
+        viewBlack.frame = CGRect(x: self.view.frame.size.width/2 - 45, y: self.view.frame.size.height - 100, width: self.view.frame.size.width/2 + 40, height: 100)
+        viewBlack.backgroundColor = UIColor.blackColor()
+        viewBlack.tag = 10998
+        imagePicker.view.addSubview(viewBlack)
+        
+        let btnGallary = UIButton(type : .Custom)
+        btnGallary.frame = CGRect(x: 10, y: 0, width: 80, height: 80)
+        btnGallary.addTarget(self, action: #selector(CheckInViewController.capture(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        btnGallary.setTitle("", forState: UIControlState.Normal)
+        btnGallary.setImage(UIImage(named: "click icon.png"), forState: UIControlState.Normal)
+        btnGallary.tag = 1011
+        viewBlack.addSubview(btnGallary)
+        
+        let btnGallary1 = UIButton(type : .Custom)
+        btnGallary1.frame = CGRect(x: viewBlack.frame.size.width/2 + 30, y: 0, width: 80, height: 80)
+        btnGallary1.addTarget(self, action: #selector(CheckInViewController.openPhotoLibraryButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        btnGallary1.setTitle("", forState: UIControlState.Normal)
+        btnGallary1.setImage(UIImage(named: "gallery Icon.png"), forState: UIControlState.Normal)
+        btnGallary1.tag = 1011
+        viewBlack.addSubview(btnGallary1)
+        
+        imagePicker1 = imagePicker
+        imagePicker1.delegate = self
+        imagePicker1.allowsEditing = true
+    }
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+            if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+            
+            imageSelected = resizeImage(pickedImage)
+            isCameraCancel = false
+            isImageClicked = true
+            isComingFromDishTag = false
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+        
+       else if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            imageSelected = resizeImage(pickedImage)
+            isCameraCancel = false
+            isImageClicked = true
+            isComingFromDishTag = false
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        self.tabBarController?.selectedIndex = 0
+        self.tabBarController?.tabBar.hidden = false
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func cancel(sender : UIButton){
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func capture(sender : UIButton){
+        
+        imagePicker1.showsCameraControls = true
+        imagePicker1.takePicture()
+        
+        imagePicker1.allowsEditing = true
+        imagePicker1.delegate = self
+        
+        imagePicker1.view.viewWithTag(1009)?.hidden = true
+        imagePicker1.view.viewWithTag(1010)?.hidden = true
+        imagePicker1.view.viewWithTag(1011)?.hidden = true
+        imagePicker1.view.viewWithTag(10998)?.hidden = true
+        
+        let viewBlack = UIView()
+        viewBlack.frame = CGRect(x: 0, y: self.view.frame.size.height - 70, width: 100, height: 90)
+        viewBlack.backgroundColor = UIColor.clearColor()
+        // viewBlack.alpha = 0.7
+        viewBlack.tag = 10910
+        imagePicker1.view.addSubview(viewBlack)
+        
+        let btnGallary = UIButton(type : .Custom)
+        btnGallary.frame = CGRect(x: 10, y: 0, width: 80, height: 80)
+        btnGallary.addTarget(self, action: #selector(CheckInViewController.retake(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        btnGallary.setTitle("", forState: UIControlState.Normal)
+        btnGallary.tag = 101100
+        viewBlack.addSubview(btnGallary)
+        
+    }
+    
+    func retake(sender : UIButton){
+        sender.superview!.viewWithTag(1009)?.hidden = false
+        sender.superview!.viewWithTag(1010)?.hidden = false
+        sender.superview!.viewWithTag(1011)?.hidden = true
+        sender.superview!.viewWithTag(10998)?.hidden = false
+        sender.superview!.viewWithTag(10910)?.hidden = true
+        sender.superview!
+            .viewWithTag(101100)?.hidden = true
+        
+        isComingFromDishTag = true
+        dismissViewControllerAnimated(true, completion: nil)
+//        self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.5)
     }
     
     func resizeImage(image : UIImage) -> UIImage
@@ -453,27 +578,27 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     
     //MARK:- SEarchBar Delegates
     
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         //  searchBar.setShowsCancelButton(true, animated: true)
         searchActive = true;
     }
     
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+    func searchBarTextDidEndEditing(searchBar: UISearchBar) {
         searchActive = false;
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
         searchActive = false;
         searchBar.resignFirstResponder()
         
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         searchActive = false;
         searchBar.resignFirstResponder()
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         
         
         let searchPredicate = NSPredicate(format: "restaurantName CONTAINS[cd] %@", searchText)
@@ -620,7 +745,6 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
             }
            
         }
-            
             loaderView.hidden = true
             self.tableView?.reloadData()
             stopLoading(self.view)
@@ -920,8 +1044,16 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     }
     
     //MARK:- Tabbarcontroller delegate
+//    func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
+//        if (!(viewController.isEqual(CheckInViewController))) {
+//        self.navigationController?.popToRootViewControllerAnimated(false)
+//        }
+//    }
+    
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
-        self.navigationController?.popToRootViewControllerAnimated(false)
+                if (!(viewController.isEqual(CheckInViewController))) {
+                self.navigationController?.popToRootViewControllerAnimated(true)
+                }
     }
     
     //MARK:- TTTAttributedLabelDelegates
@@ -1005,19 +1137,22 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touch = touches.first {
-            let currentPoint = touch.locationInView(conectivityMsg)
-            // do something with your currentPoint
-            if(isConnectedToNetwork()){
-                conectivityMsg.removeFromSuperview()
-                dispatch_async(dispatch_get_main_queue()) {
-                 self.callInt = 0
-                 self.addLocationManager()
+        
+        for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                if(isConnectedToNetwork()){
+                    conectivityMsg.removeFromSuperview()
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.callInt = 0
+                        self.addLocationManager()
+                    }
                 }
             }
         }
     }
 
+   
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

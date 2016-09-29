@@ -748,19 +748,21 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touch = touches.first {
-            let currentPoint = touch.locationInView(conectivityMsg)
-            // do something with your currentPoint
-            if(isConnectedToNetwork()){
-                conectivityMsg.removeFromSuperview()
-                if(self.searchBar?.text?.characters.count > 0){
-                    self.searchBar(self.searchBar!, textDidChange: (self.searchBar?.text)!)
-                    self.imgEmptyScreen.hidden = true
-                    self.lblEmptyTitle.hidden = true
-                }
-                else{
-                    self.imgEmptyScreen.hidden = false
-                    self.lblEmptyTitle.hidden = false
+        
+        
+        for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                if(isConnectedToNetwork()){
+                    conectivityMsg.removeFromSuperview()
+                    if(self.searchBar?.text?.characters.count > 0){
+                        self.searchBar(self.searchBar!, textDidChange: (self.searchBar?.text)!)
+                        self.imgEmptyScreen.hidden = true
+                        self.lblEmptyTitle.hidden = true
+                    }
+                    else{
+                        self.imgEmptyScreen.hidden = false
+                        self.lblEmptyTitle.hidden = false
+                    }
                 }
             }
         }

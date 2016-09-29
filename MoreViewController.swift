@@ -427,7 +427,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         tableView!.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: true)
-        self.navigationController?.popToRootViewControllerAnimated(false)
+        self.navigationController?.popToRootViewControllerAnimated(true)
         selectedTabBarIndex = 4
     }
     

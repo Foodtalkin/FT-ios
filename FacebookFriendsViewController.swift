@@ -240,15 +240,16 @@ class FacebookFriendsViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touch = touches.first {
-            let currentPoint = touch.locationInView(conectivityMsg)
-            // do something with your currentPoint
-            if(isConnectedToNetwork()){
-                conectivityMsg.removeFromSuperview()
-                dispatch_async(dispatch_get_main_queue()) {
-                    showLoader(self.view)
-                    self.webServiceCalling()
-        //            delegate = self
+       
+        
+        for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                if(isConnectedToNetwork()){
+                    conectivityMsg.removeFromSuperview()
+                    dispatch_async(dispatch_get_main_queue()) {
+                        showLoader(self.view)
+                        self.webServiceCalling()
+                    }
                 }
             }
         }

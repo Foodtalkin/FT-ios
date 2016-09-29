@@ -1418,6 +1418,19 @@ class DishProfileViewController: UIViewController, iCarouselDataSource, iCarouse
                 }
             }
         }
+        
+        for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                if(isConnectedToNetwork()){
+                    conectivityMsg.removeFromSuperview()
+                    dispatch_async(dispatch_get_main_queue()) {
+                        
+                       
+                        
+                    }
+                }
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {

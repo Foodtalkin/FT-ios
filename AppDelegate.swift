@@ -26,12 +26,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     var locationManager : CLLocationManager?
     var currentLocation : CLLocation?
     var currentAppVarsion = String()
+    var tab = UITabBarController()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor(red: 18/255, green: 47/255, blue: 65/255, alpha: 1.0)], forState:UIControlState())
         
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.whiteColor()], forState:.Selected)
+        
+        let storyBoard = self.window!.rootViewController!.storyboard;
+        
+        tab = storyBoard?.instantiateViewControllerWithIdentifier("tabBarVC") as! UITabBarController
+        tab.delegate = self
         
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? NSDictionary {
@@ -716,7 +722,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
         let nav = UINavigationController()
-        nav.popToRootViewControllerAnimated(false)
+        nav.popToRootViewControllerAnimated(true)
     }
     
 

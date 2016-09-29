@@ -2385,22 +2385,24 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touch = touches.first {
-            let currentPoint = touch.locationInView(conectivityMsg)
-            // do something with your currentPoint
-            if(isConnectedToNetwork()){
-                conectivityMsg.removeFromSuperview()
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.webserviceData()
-                }
-                
-                self.performSelector(#selector(OpenPostViewController.webServiceCallComments), withObject: nil, afterDelay: 0.0)
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    self.webServiceForFriendList()
+       
+        for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                if(isConnectedToNetwork()){
+                    conectivityMsg.removeFromSuperview()
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.webserviceData()
+                    }
+                    
+                    self.performSelector(#selector(OpenPostViewController.webServiceCallComments), withObject: nil, afterDelay: 0.0)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.webServiceForFriendList()
+                    }
                 }
             }
         }
+        
     }
     
 

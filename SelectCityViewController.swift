@@ -321,6 +321,15 @@ class SelectCityViewController: UIViewController, UITextFieldDelegate,  UITableV
                 conectivityMsg.removeFromSuperview()
             }
         }
+        
+        for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                if(isConnectedToNetwork()){
+                    conectivityMsg.removeFromSuperview()
+                    
+                }
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {

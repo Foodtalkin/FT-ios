@@ -462,7 +462,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
     
     //MARK:- TabBarController Delegate
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
-        self.navigationController?.popToRootViewControllerAnimated(false)
+        self.navigationController?.popToRootViewControllerAnimated(true)
         if(notificationArray.count > 0){
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         self.tabBarController?.tabBar.userInteractionEnabled = true
@@ -472,14 +472,13 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touch = touches.first {
-            let currentPoint = touch.locationInView(conectivityMsg)
-            // do something with your currentPoint
-            if(isConnectedToNetwork()){
-                conectivityMsg.removeFromSuperview()
-                dispatch_async(dispatch_get_main_queue()) {
-                    
-                    self.webServiceCall()
+               for var view : UIView in self.view.subviews {
+            if(view == conectivityMsg){
+                if(isConnectedToNetwork()){
+                    conectivityMsg.removeFromSuperview()
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.webServiceCall()
+                    }
                 }
             }
         }
