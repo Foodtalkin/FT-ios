@@ -11,8 +11,8 @@ import UIKit
 
 import SystemConfiguration
 
-var baseUrl = "http://52.74.136.146/index.php/service/"
-//var baseUrl = "http://52.74.13.4/index.php/service/"
+//var baseUrl = "http://52.74.136.146/index.php/service/"
+  var baseUrl = "http://52.74.13.4/index.php/service/"
 
 var conectivityMsg = UIView()
 

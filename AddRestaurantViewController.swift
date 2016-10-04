@@ -186,11 +186,8 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
             if(dict.objectForKey("status") as! String == "OK"){
                 restaurantId = dict.objectForKey("restaurantId") as! String
                 selectedRestaurantName = (txtRestaurantName?.text)!
-                //    isComingFromDishTag = true
-                //    self.navigationController?.popViewControllerAnimated(true)
-                let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("DishTag") as! DishTagViewController;
-                self.navigationController!.pushViewController(openPost, animated:true);
-                
+                isRestaurantSelect = true
+                self.navigationController?.popToRootViewControllerAnimated(false)
             }
             else if(dict.objectForKey("status")!.isEqual("error")){
                 if(dict.objectForKey("errorCode")!.isEqual(6)){

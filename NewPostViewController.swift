@@ -11,10 +11,13 @@ import AVFoundation
 
 class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    @IBOutlet var imgDish : UIImageView?
     @IBOutlet var floatRatingView: FloatRatingView!
     @IBOutlet var txtReview : UITextView?
     var btnSharePost = UIButton()
     var ratingSegmentedControl: UISegmentedControl!
+    @IBOutlet var btnAddDish : UIButton?
+    @IBOutlet var btnRestaurant : UIButton?
     
     let captureSession = AVCaptureSession()
     let stillImageOutput = AVCaptureStillImageOutput()
@@ -31,7 +34,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         
         self.fitFloatRating()
         
-        self.tabBarController?.tabBar.hidden = true
+        
         self.navigationController?.navigationBar.barStyle = UIBarStyle.Black
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
@@ -42,11 +45,38 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         btnSharePost.frame = CGRectMake(0, self.view.frame.size.height - 45, self.view.frame.size.width, 45)
         btnSharePost.backgroundColor = colorActive
         btnSharePost.setTitle("Share post", forState: UIControlState.Normal)
+        btnSharePost.addTarget(self, action: #selector(NewPostViewController.sharePostCall(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(btnSharePost)
+        
+        let button: UIButton = UIButton(type: UIButtonType.Custom)
+        button.setImage(UIImage(named: "Back icon.png"), forState: UIControlState())
+        button.addTarget(self, action: #selector(NewPostViewController.backPressed), forControlEvents: UIControlEvents.TouchUpInside)
+        button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        let barButton = UIBarButtonItem(customView: button)
+        self.navigationItem.leftBarButtonItem = barButton
     }
     
     override func viewWillAppear(animated: Bool) {
-        openPost()
+        self.tabBarController?.tabBar.hidden = true
+        if(isImageClicked == false){
+            imgDish?.image = UIImage(named: "placeholder.png")
+            btnAddDish?.setTitle("Add a dish", forState: UIControlState.Normal)
+            btnRestaurant?.setTitle("Checkin", forState: UIControlState.Normal)
+            self.floatRatingView.rating = 0
+            txtReview?.text = ""
+
+            openPost()
+        }
+        else{
+            if(isDishSelect == true){
+            btnAddDish!.setTitle(dishNameSelected, forState: UIControlState.Normal)
+                isDishSelect = false
+            }
+            if(isRestaurantSelect == true){
+            btnRestaurant!.setTitle(selectedRestaurantName, forState: UIControlState.Normal)
+                isRestaurantSelect = false
+            }
+        }
     }
     
     func fitFloatRating(){
@@ -61,6 +91,10 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         self.floatRatingView.editable = true
         self.floatRatingView.halfRatings = false
         self.floatRatingView.floatRatings = false
+    }
+    
+    func backPressed(){
+        openPost()
     }
     
     //MARK:- Camera Controls methods
@@ -100,7 +134,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         
         let btnGallary = UIButton(type : .Custom)
         btnGallary.frame = CGRect(x: 10, y: 0, width: 80, height: 80)
-        btnGallary.addTarget(self, action: #selector(CheckInViewController.capture(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        btnGallary.addTarget(self, action: #selector(NewPostViewController.capture(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         btnGallary.setTitle("", forState: UIControlState.Normal)
         btnGallary.setImage(UIImage(named: "click icon.png"), forState: UIControlState.Normal)
         btnGallary.tag = 1011
@@ -108,7 +142,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         
         let btnGallary1 = UIButton(type : .Custom)
         btnGallary1.frame = CGRect(x: viewBlack.frame.size.width/2 + 30, y: 0, width: 80, height: 80)
-        btnGallary1.addTarget(self, action: #selector(CheckInViewController.openPhotoLibraryButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        btnGallary1.addTarget(self, action: #selector(NewPostViewController.openPhotoLibraryButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         btnGallary1.setTitle("", forState: UIControlState.Normal)
         btnGallary1.setImage(UIImage(named: "gallery Icon.png"), forState: UIControlState.Normal)
         btnGallary1.tag = 1011
@@ -124,6 +158,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             
             imageSelected = resizeImage(pickedImage)
+            self.imgDish?.image = imageSelected
             isCameraCancel = false
             isImageClicked = true
             isComingFromDishTag = false
@@ -132,6 +167,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
             
         else if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageSelected = resizeImage(pickedImage)
+            self.imgDish?.image = imageSelected
             isCameraCancel = false
             isImageClicked = true
             isComingFromDishTag = false
@@ -171,7 +207,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         
         let btnGallary = UIButton(type : .Custom)
         btnGallary.frame = CGRect(x: 10, y: 0, width: 80, height: 80)
-        btnGallary.addTarget(self, action: #selector(CheckInViewController.retake(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        btnGallary.addTarget(self, action: #selector(NewPostViewController.retake(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         btnGallary.setTitle("", forState: UIControlState.Normal)
         btnGallary.tag = 101100
         viewBlack.addSubview(btnGallary)
@@ -287,6 +323,38 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
             return false
         }
         return true
+    }
+    
+    //MARK:- sharePostMethod
+    
+    @IBAction func sharePostCall(sender : UIButton){
+        if(btnAddDish?.titleLabel?.text != "Add a dish"){
+         //   if(btnRestaurant?.titleLabel?.text != "Checkin"){
+                if(self.floatRatingView.rating > 1){
+                    if(txtReview?.text.characters.count > 1){
+                        isUploadingStart = true
+                        isImageClicked = false
+                        reviewSelected = (txtReview?.text)!
+                        self.tabBarController?.selectedIndex = 0
+                        self.tabBarController?.tabBar.hidden = false
+                        UIApplication.sharedApplication().statusBarHidden = true
+                    }
+                    else{
+                       self.navigationController?.view.makeToast("Please write a review")
+                    }
+                    
+                }
+                else{
+                    self.navigationController?.view.makeToast("Please give rating")
+                }
+//            }
+//            else{
+//                self.navigationController?.view.makeToast("Please checkin")
+//            }
+        }
+        else{
+            self.navigationController?.view.makeToast("Please add a dish")
+        }
     }
 
     override func didReceiveMemoryWarning() {

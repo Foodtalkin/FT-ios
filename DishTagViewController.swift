@@ -10,6 +10,7 @@ import UIKit
 
 var dishNameSelected = String()
 var isComingFromDishTag = false
+var isDishSelect : Bool = false
 
 class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate, UISearchBarDelegate {
     
@@ -78,160 +79,54 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         return true
     }
     
-    
-//    func textFieldDidBeginEditing(textField: UITextField) {
-//        searchActive = true;
-//        tableView = UITableView()
-//        tableView!.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height)
-//        tableView!.dataSource = self
-//        tableView!.delegate = self
-//        tableView!.hidden = true
-//        self.view.addSubview(tableView!)
-//
-//    }
-    
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        //  searchBar.setShowsCancelButton(true, animated: true)
         searchActive = true;
-        tableView = UITableView()
-        tableView!.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height)
-        tableView!.dataSource = self
-        tableView!.delegate = self
-        tableView!.hidden = true
-        self.view.addSubview(tableView!)
     }
-
-//    func textFieldDidEndEditing(textField: UITextField) {
-//        searchActive = false
-//    }
     
     func searchBarTextDidEndEditing(searchBar: UISearchBar) {
-        searchActive = false
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchActive = false;
+        searchBar.resignFirstResponder()
+        
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        searchActive = false;
+        searchBar.resignFirstResponder()
     }
 
-//    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-//        
-//        if(range.length + range.location < 32){
-//            
-//            if string.characters.count == 0 && range.length > 0 {
-//                // Back pressed
-//                return true
-//            }
-//            
-//            if((textField.text?.characters.count)! + (string.characters.count - range.length) < 1){
-//                tableView!.hidden = true
-//            }
-//            else{
-//               tableView!.hidden = false
-//            }
-//            
-//            
-//        if(NSString(string: textField.text!).length > 3){
-//            navigationItem.rightBarButtonItem?.enabled = true
-//        }
-//        else{
-//            navigationItem.rightBarButtonItem?.enabled = false
-//        }
-//        if(NSString(string: textField.text!).length < 2){
-//            navigationItem.rightBarButtonItem?.enabled = false
-//        }
-//        else{
-//            navigationItem.rightBarButtonItem?.enabled = true
-//        }
-//        
-//        let aSet = NSCharacterSet(charactersInString:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ").invertedSet
-//        let compSepByCharInSet = string.componentsSeparatedByCharactersInSet(aSet)
-//        let numberFiltered = compSepByCharInSet.joinWithSeparator("")
-//        
-//        
-//            let searchPredicate = NSPredicate(format: "SELF CONTAINS[cd] %@", textField.text!.stringByAppendingString(numberFiltered))
-//            let array = (arrDishNameList).filteredArrayUsingPredicate(searchPredicate)
-//            
-//            filtered = []
-//            filtered = array
-//            
-//            if(filtered.count == 0){
-//                searchActive = false;
-//            } else {
-//                searchActive = true;
-//            }
-//            self.tableView!.reloadData()
-//     
-//        textField.text = (textField.text! as NSString).stringByReplacingCharactersInRange(range, withString: numberFiltered.lowercaseString)
-//        
-//        return false
-//        }
-//        else{
-//            tableView!.hidden = true
-//        }
-//        if string.characters.count == 0 && range.length > 0 {
-//            // Back pressed
-//            return true
-//        }
-//        return false
-//    }
     
-    func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        if(range.length + range.location < 32){
-            
-            if text.characters.count == 0 && range.length > 0 {
-                // Back pressed
-                return true
-            }
-            
-            if((searchBar.text?.characters.count)! + (text.characters.count - range.length) < 1){
-                tableView!.hidden = true
-            }
-            else{
-                tableView!.hidden = false
-            }
-            
-            
-            if(NSString(string: searchBar.text!).length > 3){
-                navigationItem.rightBarButtonItem?.enabled = true
-            }
-            else{
-                navigationItem.rightBarButtonItem?.enabled = false
-            }
-            if(NSString(string: searchBar.text!).length < 2){
-                navigationItem.rightBarButtonItem?.enabled = false
-            }
-            else{
-                navigationItem.rightBarButtonItem?.enabled = true
-            }
-            
-            let aSet = NSCharacterSet(charactersInString:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ").invertedSet
-            let compSepByCharInSet = text.componentsSeparatedByCharactersInSet(aSet)
-            let numberFiltered = compSepByCharInSet.joinWithSeparator("")
-            
-            
-            let searchPredicate = NSPredicate(format: "SELF CONTAINS[cd] %@", searchBar.text!.stringByAppendingString(numberFiltered))
-            let array = (arrDishNameList).filteredArrayUsingPredicate(searchPredicate)
-            
-            filtered = []
-            filtered = array
-            
-            if(filtered.count == 0){
-                searchActive = false;
-            } else {
-                searchActive = true;
-            }
-            self.tableView!.reloadData()
-            
-            searchBar.text = (searchBar.text! as NSString).stringByReplacingCharactersInRange(range, withString: numberFiltered.lowercaseString)
-            
-            return false
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        let searchPredicate = NSPredicate(format: "SELF CONTAINS[cd] %@", searchText)
+        let array = (arrDishNameList).filteredArrayUsingPredicate(searchPredicate)
+        //       filtered = array as! [String]
+        
+        self.filtered = []
+        self.filtered = array as NSArray
+        
+        if(searchBar.text?.characters.count < 1){
+            self.searchActive = false;
         }
         else{
-            tableView!.hidden = true
+            if(self.filtered.count == 0){
+                self.searchActive = true;
+                
+            } else {
+                
+                self.searchActive = true;
+            }
         }
-        if text.characters.count == 0 && range.length > 0 {
-            // Back pressed
-            return true
-        }
-        tableView?.reloadData()
-        return false
-    }
+        
+       self.tableView!.reloadData()
 
+    }
+    
+   
     //MARK:- tableViewDatasourceDelegates
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -270,6 +165,9 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         imgDish.image = UIImage(named: "Add dish.png")
         imgDish.layer.cornerRadius = 5
         imgDish.layer.masksToBounds = true
+        
+        cell.textLabel?.textColor = colorBlack
+        cell.textLabel?.font = UIFont(name: fontBold, size: 16)
         
         
         if(searchActive){
@@ -323,16 +221,20 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         
         if(filtered.count > 0){
         dishNameSelected = filtered.objectAtIndex(indexPath.row) as! String
-    //    txtDishName?.text = (filtered.objectAtIndex(indexPath.row) as! String).stringByReplacingCharactersInRange(dishNameSelected.rangeOfString(dishNameSelected)!, withString: dishNameSelected.lowercaseString)
+   
         }
         else{
-         dishNameSelected = (searchBar.text)!
-            let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("RatingVC") as! RatingViewController;
-            self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
+            if(searchBar.text?.characters.count == 0){
+              dishNameSelected = arrDishNameList.objectAtIndex(indexPath.row) as! String
+            }
+            else{
+              dishNameSelected = (searchBar.text)!
+            }
+
         }
+        isDishSelect = true
+        self.navigationController?.popViewControllerAnimated(false)
         navigationItem.rightBarButtonItem?.enabled = true
-    //    tableView.removeFromSuperview()
-        tableView.hidden = true
     }
     
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {

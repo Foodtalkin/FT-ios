@@ -15,8 +15,9 @@ var selectedRestaurantName = String()
 var isRatedLater : Bool = false
 var imageSelected = UIImage()
 var isCameraCancel : Bool = false
+var isRestaurantSelect : Bool = false
 
-class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate,  UIGestureRecognizerDelegate, FloatRatingViewDelegate, UITabBarControllerDelegate, CLLocationManagerDelegate, TTTAttributedLabelDelegate, WebServiceCallingDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate,  UIGestureRecognizerDelegate,  UITabBarControllerDelegate, CLLocationManagerDelegate, TTTAttributedLabelDelegate, WebServiceCallingDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet var tableView : UITableView?
     @IBOutlet var btnAddRestaurant : UIButton?
@@ -44,7 +45,6 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     var locationVal : NSMutableDictionary?
     
     var callInt : Int = 0
-    
     var loaderView  = UIView()
     var searchingLabel = UILabel()
     var activityIndicator1 = UIActivityIndicatorView()
@@ -111,7 +111,6 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         textFieldInsideSearchBar?.textColor = colorSnow
         textFieldInsideSearchBar?.backgroundColor = UIColor.clearColor()
         //
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Skip", style: .Plain, target: self, action: #selector(CheckInViewController.addTapped))
 
         self.tabBarController?.delegate = self
     }
@@ -120,29 +119,10 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         
         self.refreshControl.endRefreshing()
         searchBar.text = ""
-//        if(isComingFromDishTag == true){
-//         //   imagePicker.removeFromParentViewController()
-//            loaderView.hidden = true
-//            self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.5)
-//            callInt = 0
-//            self.restaurantDetails = NSMutableArray()
-//            self.restaurentNameList = NSMutableArray()
-//            isComingFromDishTag = false
-//            isImageClicked = false
-//        }
-//        else if(isCameraCancel == true){
-//            loaderView.hidden = true
-//            self.tabBarController?.tabBar.hidden = false
-//            self.tabBarController?.tabBar.translucent = false
-//            self.navigationController?.navigationBarHidden = false
-//            UIApplication.sharedApplication().statusBarHidden = false
-//            isCameraCancel = false
-//            self.performSelector(#selector(CheckInViewController.callDelay), withObject: nil, afterDelay: 0.2)
-//        }
-//        else{
+
             selectedTabBarIndex = 2
             
-            searchActive = false
+        
             searchBar.resignFirstResponder()
             searchActive = false
             
@@ -194,28 +174,10 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
             if(isConnectedToNetwork() == false){
                 loaderView.hidden = true
             }
-            
-            
-            if(ratingValue.count > 0){
-                navigationItem.rightBarButtonItem?.enabled = false
-                showRatinglaterView()
-            }
-            else
-            {
-                rateLaterView.removeFromSuperview()
-            }
-            if(isImageClicked == false){
-                loaderView.hidden = false
-                
-                self.restaurantDetails = NSMutableArray()
-                self.restaurentNameList = NSMutableArray()
-                self.openPost()
-                
-            }
-            else{
+        
                     callInt = 0
                     addLocationManager()
-            }
+        
         
         tableView?.reloadData()
     }
@@ -255,21 +217,13 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         }
     }
     
-    func addTapped(){
-        selectedRestaurantName = ""
-        restaurantId = ""
-        //       self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.0)
-        let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("DishTag") as! DishTagViewController;
-        self.navigationController!.pushViewController(openPost, animated:true);
-        self.navigationController?.navigationBarHidden = false
-        isImageClicked = false
-    }
     
     func backPressed(){
-        isImageClicked = false
-        self.tabBarController?.selectedIndex = 0
-        self.tabBarController?.tabBar.hidden = false
-        self.tabBarController?.tabBar.translucent = false
+//        isImageClicked = false
+//        self.tabBarController?.selectedIndex = 0
+//        self.tabBarController?.tabBar.hidden = false
+//        self.tabBarController?.tabBar.translucent = false
+        self.navigationController?.popViewControllerAnimated(false)
     }
 
     
@@ -368,188 +322,13 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         }
         
         //        self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.0)
-        
-        let openPost1 = self.storyboard!.instantiateViewControllerWithIdentifier("DishTag") as! DishTagViewController;
-        self.navigationController!.pushViewController(openPost1, animated:true);
-        self.navigationController?.navigationBarHidden = false
-        isImageClicked = false
+        isRestaurantSelect = true
+        self.navigationController?.popViewControllerAnimated(false)
     }
     
     
     //MARK:- SkipButtonMethod
-    func openPost(){
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
-            let imagePicker = UIImagePickerController()
-            imagePicker.delegate = self
-            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera;
-            
-               imagePicker.allowsEditing = true
-            imagePicker.showsCameraControls = true
-            
-            addOnImagePicker(imagePicker)
-      //      self.present(imagePicker, animated: true, completion: nil)
-            self.presentViewController(imagePicker, animated: true, completion: nil)
-        }
-    }
     
-    @IBAction func openPhotoLibraryButton(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary) {
-            let imagePicker = UIImagePickerController()
-            imagePicker.delegate = self
-            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-            imagePicker.allowsEditing = true
-            self.presentViewController(imagePicker, animated: true, completion: nil)
-            
-        }
-    }
-    
-    func addOnImagePicker(imagePicker : UIImagePickerController){
-        let viewBlack = UIView()
-        viewBlack.frame = CGRect(x: self.view.frame.size.width/2 - 45, y: self.view.frame.size.height - 100, width: self.view.frame.size.width/2 + 40, height: 100)
-        viewBlack.backgroundColor = UIColor.blackColor()
-        viewBlack.tag = 10998
-        imagePicker.view.addSubview(viewBlack)
-        
-        let btnGallary = UIButton(type : .Custom)
-        btnGallary.frame = CGRect(x: 10, y: 0, width: 80, height: 80)
-        btnGallary.addTarget(self, action: #selector(CheckInViewController.capture(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        btnGallary.setTitle("", forState: UIControlState.Normal)
-        btnGallary.setImage(UIImage(named: "click icon.png"), forState: UIControlState.Normal)
-        btnGallary.tag = 1011
-        viewBlack.addSubview(btnGallary)
-        
-        let btnGallary1 = UIButton(type : .Custom)
-        btnGallary1.frame = CGRect(x: viewBlack.frame.size.width/2 + 30, y: 0, width: 80, height: 80)
-        btnGallary1.addTarget(self, action: #selector(CheckInViewController.openPhotoLibraryButton(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        btnGallary1.setTitle("", forState: UIControlState.Normal)
-        btnGallary1.setImage(UIImage(named: "gallery Icon.png"), forState: UIControlState.Normal)
-        btnGallary1.tag = 1011
-        viewBlack.addSubview(btnGallary1)
-        
-        imagePicker1 = imagePicker
-        imagePicker1.delegate = self
-        imagePicker1.allowsEditing = true
-    }
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        
-            if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-            
-            imageSelected = resizeImage(pickedImage)
-            isCameraCancel = false
-            isImageClicked = true
-            isComingFromDishTag = false
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
-        
-       else if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            imageSelected = resizeImage(pickedImage)
-            isCameraCancel = false
-            isImageClicked = true
-            isComingFromDishTag = false
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
-    }
-    
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.tabBarController?.selectedIndex = 0
-        self.tabBarController?.tabBar.hidden = false
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func cancel(sender : UIButton){
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func capture(sender : UIButton){
-        
-        imagePicker1.showsCameraControls = true
-        imagePicker1.takePicture()
-        
-        imagePicker1.allowsEditing = true
-        imagePicker1.delegate = self
-        
-        imagePicker1.view.viewWithTag(1009)?.hidden = true
-        imagePicker1.view.viewWithTag(1010)?.hidden = true
-        imagePicker1.view.viewWithTag(1011)?.hidden = true
-        imagePicker1.view.viewWithTag(10998)?.hidden = true
-        
-        let viewBlack = UIView()
-        viewBlack.frame = CGRect(x: 0, y: self.view.frame.size.height - 70, width: 100, height: 90)
-        viewBlack.backgroundColor = UIColor.clearColor()
-        // viewBlack.alpha = 0.7
-        viewBlack.tag = 10910
-        imagePicker1.view.addSubview(viewBlack)
-        
-        let btnGallary = UIButton(type : .Custom)
-        btnGallary.frame = CGRect(x: 10, y: 0, width: 80, height: 80)
-        btnGallary.addTarget(self, action: #selector(CheckInViewController.retake(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        btnGallary.setTitle("", forState: UIControlState.Normal)
-        btnGallary.tag = 101100
-        viewBlack.addSubview(btnGallary)
-        
-    }
-    
-    func retake(sender : UIButton){
-        sender.superview!.viewWithTag(1009)?.hidden = false
-        sender.superview!.viewWithTag(1010)?.hidden = false
-        sender.superview!.viewWithTag(1011)?.hidden = true
-        sender.superview!.viewWithTag(10998)?.hidden = false
-        sender.superview!.viewWithTag(10910)?.hidden = true
-        sender.superview!
-            .viewWithTag(101100)?.hidden = true
-        
-        isComingFromDishTag = true
-        dismissViewControllerAnimated(true, completion: nil)
-//        self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.5)
-    }
-    
-    func resizeImage(image : UIImage) -> UIImage
-    {
-        var actualHeight = image.size.height as CGFloat;
-        var actualWidth = image.size.width as CGFloat;
-        let maxHeight = 1080.0 as CGFloat
-        let maxWidth = 1080.0 as CGFloat
-        var imgRatio = actualWidth/actualHeight;
-        let maxRatio = maxWidth/maxHeight;
-        let compressionQuality = 0.1 as CGFloat;//50 percent compression
-        
-        if (actualHeight > maxHeight || actualWidth > maxWidth)
-        {
-            if(imgRatio < maxRatio)
-            {
-                //adjust width according to maxHeight
-                imgRatio = maxHeight / actualHeight;
-                actualWidth = imgRatio * actualWidth;
-                actualHeight = maxHeight;
-            }
-            else if(imgRatio > maxRatio)
-            {
-                //adjust height according to maxWidth
-                imgRatio = maxWidth / actualWidth;
-                actualHeight = imgRatio * actualHeight;
-                actualWidth = maxWidth;
-            }
-            else
-            {
-                actualHeight = maxHeight;
-                actualWidth = maxWidth;
-            }
-        }
-        
-        let rect = CGRect(x: 0.0, y: 0.0, width: actualWidth, height: actualHeight);
-        UIGraphicsBeginImageContext(rect.size);
-        image.drawInRect(rect);
-        let img = UIGraphicsGetImageFromCurrentImageContext();
-        let imageData = UIImageJPEGRepresentation(img!, compressionQuality);
-        UIGraphicsEndImageContext();
-        
-        return UIImage(data: imageData!)!;
-        //      return image
-        
-    }
-
     
     func doubleTabMethod(sender : UITapGestureRecognizer){
         
@@ -563,10 +342,8 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         }
         
         //        self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.0)
-        
-        let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("DishTag") as! DishTagViewController;
-        self.navigationController!.pushViewController(openPost, animated:true);
-        self.navigationController?.navigationBarHidden = false
+        isRestaurantSelect = true
+        self.navigationController?.popViewControllerAnimated(false)
         
     }
     
@@ -636,50 +413,9 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     }
 
     //MARK:- WebServiceCalling & Delegates
+        
     
-    func webServiceCallRating(){
-        if (isConnectedToNetwork()){
-            showLoader(self.view)
-            
-            let url = String(format: "%@%@%@", baseUrl,controllerPost,"getUnreated")
-            let sessionId = NSUserDefaults.standardUserDefaults().objectForKey("sessionId")
-            let params = NSMutableDictionary()
-            
-            params.setObject(sessionId!, forKey: "sessionId")
-            
-            webServiceCallingPost(url, parameters: params)
-            
-            delegate = self
-        }
-        else{
-            internetMsg(self.view)
-        }
-        stopLoading(self.view)
-    }
-    
-    func webServiceUpdateRating(){
-        if (isConnectedToNetwork()){
-            showLoader(self.view)
-            dispatch_async(dispatch_get_main_queue()) {
-                let url = String(format: "%@%@%@", baseUrl,controllerPost,"updateRating")
-                let sessionId = NSUserDefaults.standardUserDefaults().objectForKey("sessionId")
-                
-                let params = NSMutableDictionary()
-                
-                params.setObject(sessionId!, forKey: "sessionId" as NSCopying)
-                params.setObject(self.postIdRating, forKey: "postId" as NSCopying)
-                params.setObject(self.ratedLaterValue, forKey: "rating" as NSCopying)
-                
-                webServiceCallingPost(url,parameters: params)
-                delegate = self
-            }
-        }
-        else{
-            internetMsg(self.view)
-        }
-        stopLoading(self.view)
-    }
-    
+        
     func webServiceCallingForRestaurant(){
         if (isConnectedToNetwork()){
             
@@ -745,73 +481,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         
         }
     
-    else if(dict.objectForKey("api") as! String == "post/GetUnreated"){
-    dispatch_async(dispatch_get_main_queue()){
-    if(dict.objectForKey("status") as! String == "OK"){
-    let arrayVal = dict.objectForKey( "post")?.mutableCopy() as? NSMutableArray
-    if(arrayVal!.count > 0){
-    ratingValue = arrayVal?.objectAtIndex(0) as! NSDictionary
-    }
-    else{
-    self.webServiceCallingForRestaurant()
-    }
-    }
-    else if(dict.objectForKey("status")!.isEqual("error")){
-    if(dict.objectForKey("errorCode")!.isEqual(6)){
-    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "sessionId")
-    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "userId")
-    self.dismissViewControllerAnimated(true, completion: nil)
     
-    let nav = (self.navigationController?.viewControllers)! as NSArray
-    if(!(nav.objectAtIndex(0).isKindOfClass(LoginViewController))){
-    for viewController in nav {
-    // some process
-    if (viewController.isKindOfClass(LoginViewController)) {
-    self.navigationController?.visibleViewController?.navigationController?.popToViewController(viewController as! UIViewController, animated: true)
-    break
-    }
-    }
-    }
-    let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("Login") as! LoginViewController;
-    self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
-    }
-    }
-    stopLoading(self.view)
-    }
-    }
-    else if(dict.objectForKey("api") as! String == "post/updateRating"){
-    
-    floatRatingView.removeFromSuperview()
-    submitRatingView.removeFromSuperview()
-    rateLaterView.removeFromSuperview()
-    ratingValue = NSDictionary()
-    btnAddRestaurant?.enabled = true
-    if(dict.objectForKey("status") as! String == "OK"){
-    dispatch_async(dispatch_get_main_queue()) {
-    self.webServiceCallingForRestaurant()
-    }
-    }
-    else if((dict.objectForKey("status")! as! String).isEqual("error")){
-    if((dict.objectForKey("errorCode")! as! NSNumber).isEqual(6)){
-    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "sessionId")
-    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "userId")
-    self.dismissViewControllerAnimated(true, completion: nil)
-    
-    let nav = (self.navigationController?.viewControllers)! as NSArray
-    if(!(nav.objectAtIndex(0) as! UIViewController).isKindOfClass(LoginViewController)){
-    for viewController in nav {
-    // some process
-    if (viewController as! UIViewController).isKindOfClass( LoginViewController) {
-    self.navigationController?.visibleViewController?.navigationController?.popToViewController(viewController as! UIViewController, animated: true)
-    break
-    }
-    }
-    }
-    let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("Login") as! LoginViewController;
-    self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
-    }
-    }
-    }
     if(restaurentNameList.count > 0){
     loaderView.hidden = true
     }
@@ -821,7 +491,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     btnSettings.hidden = true
     self.refreshControl.endRefreshing()
     
-}
+   }
 
     func serviceFailedWitherror(error : NSError){
         
@@ -887,162 +557,6 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
             self.tableView!.addSubview(refreshControl)
         }
     }
-
-    
-    //MARK:- RateLaterView
-    
-    func showRatinglaterView(){
-        
-        let isContain = self.view.subviews.contains(rateLaterView)
-        if(isContain == true){
-            
-        }
-        else{
-            rateLaterView = UIView()
-            floatRatingView = FloatRatingView()
-        
-        
-        btnAddRestaurant?.enabled = false
-        
-        rateLaterView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)
-        rateLaterView.backgroundColor = UIColor.blackColor()
-        self.view.addSubview(rateLaterView)
-        rateLaterView.alpha = 1.0
-        
-        let viewCell = UIView()
-        viewCell.frame = CGRectMake(10, 100, self.view.frame.size.width - 20, self.view.frame.size.height - 10)
-        viewCell.backgroundColor = UIColor.clearColor()
-        rateLaterView.addSubview(viewCell)
-        
-        let upperView = UIView()
-        upperView.frame = CGRectMake(0, 0, viewCell.frame.size.width, 50)
-        upperView.backgroundColor = UIColor.whiteColor()
-        viewCell.addSubview(upperView)
-        
-        let imgView = UIImageView()
-        imgView.frame = CGRectMake(0, 50, viewCell.frame.size.width, viewCell.frame.size.width)
-        imgView.image = UIImage(named: "placeholder.png")
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2), dispatch_get_main_queue()) {
-         //   loadImageAndCache(imgView,url: ratingValue.objectForKey("postImage") as! String)
-            imgView.hnk_setImageFromURL(NSURL(string: ratingValue.objectForKey("postImage") as! String)!)
-        }
-        viewCell.addSubview(imgView)
-        
-        
-        //upperView's Subview
-        let profilePic = UIImageView()
-        profilePic.frame = CGRectMake(8, 8, 34, 34)
-        profilePic.backgroundColor = UIColor.grayColor()
-      //  loadImageAndCache(profilePic, url:(ratingValue.objectForKey("userThumb") as? String)!)
-        profilePic.hnk_setImageFromURL(NSURL(string: (ratingValue.objectForKey("userThumb") as? String)!)!)
-        profilePic.layer.cornerRadius = 16
-        profilePic.layer.masksToBounds = true
-        profilePic.image = UIImage(named: "username.png")
-        upperView.addSubview(profilePic)
-                
-            let statusLabel = TTTAttributedLabel(frame: CGRectMake(50, 0, upperView.frame.size.width - 75, 50))
-            statusLabel.numberOfLines = 0
-            statusLabel.font = UIFont(name: fontBold, size: 14)
-            upperView.addSubview(statusLabel)
-            
-            let lengthRestaurantname = (ratingValue.objectForKey("restaurantName") as! String).characters.count
-            
-            var status = ""
-            
-            if(lengthRestaurantname < 1){
-                status = String(format: "How did you like %@ ?", ratingValue.objectForKey("dishName") as! String)
-            }
-            else{
-                status = String(format: "How did you like %@ at %@ ?", ratingValue.objectForKey("dishName") as! String,ratingValue.objectForKey("restaurantName") as! String)
-            }
-            
-            statusLabel.text = status
-            statusLabel.delegate = self
-            statusLabel.tag = 0
-        
-        let timeLabel = UILabel()
-        timeLabel.frame = CGRectMake(upperView.frame.size.width - 25, 0, 25, 60)
-        timeLabel.text = ratingValue.objectForKey("timeElapsed") as? String
-        timeLabel.textColor = UIColor.grayColor()
-        timeLabel.font = UIFont(name: fontName, size: 12)
-        upperView.addSubview(timeLabel)
-        
-        floatRatingView.frame = CGRectMake(0, imgView.frame.origin.y+imgView.frame.size.height, viewCell.frame.size.width, 40)
-        viewCell.addSubview(floatRatingView)
-        floatRatingView.emptyImage = UIImage(named: "stars-02.png")
-        floatRatingView.fullImage = UIImage(named: "stars-01.png")
-        // Optional params
-        floatRatingView.delegate = self
-        floatRatingView.contentMode = UIViewContentMode.ScaleAspectFit
-        floatRatingView.maxRating = 5
-        floatRatingView.minRating = 1
-        floatRatingView.rating = 0
-        floatRatingView.editable = true
-        floatRatingView.halfRatings = false
-        floatRatingView.floatRatings = false
-        floatRatingView.backgroundColor = UIColor.whiteColor()
-        }
-    }
-    
-    // MARK: FloatRatingViewDelegate
-    
-    func floatRatingView(ratingView: FloatRatingView, isUpdating rating:Float) {
-        //   self.liveLabel.text = NSString(format: "%.2f", self.floatRatingView.rating) as String
-    }
-    
-    func floatRatingView(ratingView: FloatRatingView, didUpdate rating: Float) {
-        //   self.updatedLabel.text = NSString(format: "%.2f", self.floatRatingView.rating) as String
-        ratedLaterValue = ratingView.rating
-        floatRatingView.hidden = true
-        submitRatingView.frame = CGRectMake(0, floatRatingView.frame.origin.y, floatRatingView.frame.size.width, floatRatingView.frame.size.height)
-        submitRatingView.backgroundColor = UIColor.whiteColor()
-        
-        let superview = ratingView.superview
-        superview!.addSubview(submitRatingView)
-        
-        let btnSubmit = UIButton()
-        btnSubmit.frame = CGRectMake(submitRatingView.frame.size.width/2 - 30, 0, 60, 40)
-        btnSubmit.backgroundColor = UIColor.whiteColor()
-        btnSubmit.tag = floatRatingView.tag
-        btnSubmit.setTitle("Submit", forState: UIControlState.Normal)
-        btnSubmit.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
-        btnSubmit.addTarget(self, action: #selector(CheckInViewController.ratingSubmit(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        submitRatingView.addSubview(btnSubmit)
-        
-        let btnBack = UIButton()
-        btnBack.frame = CGRectMake(10, 0, 60, 40)
-        btnBack.backgroundColor = UIColor.whiteColor()
-        btnBack.setTitle("Back", forState: UIControlState.Normal)
-        btnBack.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
-        btnBack.addTarget(self, action: #selector(CheckInViewController.ratingBack(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        submitRatingView.addSubview(btnBack)
-    }
-    
-    func ratingSubmit(sender : UIButton){
-        postIdRating = ratingValue.objectForKey("id") as! String
-        floatRatingView.removeFromSuperview()
-        submitRatingView.removeFromSuperview()
-        rateLaterView.removeFromSuperview()
-        ratingValue = NSDictionary()
-        btnAddRestaurant?.enabled = true
-        rateLaterView.hidden = true
-        webServiceUpdateRating()
-        navigationItem.rightBarButtonItem?.enabled = true
-        isRatedLater = true
-    }
-    
-    func ratingBack(sender : UIButton){
-        self.floatRatingView.rating = 0
-        floatRatingView.hidden = false
-        submitRatingView.removeFromSuperview()
-    }
-    
-    //MARK:- Tabbarcontroller delegate
-//    func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
-//        if (!(viewController.isEqual(CheckInViewController))) {
-//        self.navigationController?.popToRootViewControllerAnimated(false)
-//        }
-//    }
     
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
         
@@ -1050,85 +564,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         
     }
     
-    //MARK:- TTTAttributedLabelDelegates
     
-    func attributedLabel(label: TTTAttributedLabel!, didSelectLinkWithURL url: NSURL!) {
-        if(url == NSURL(string: "action://users/\("userName")")){
-            isUserInfo = false
-                        postDictHome = ratingValue
-                        openProfileId = (postDictHome.objectForKey("userId") as? String)!
-                        postImageOrgnol = (postDictHome.objectForKey("userImage") as? String)!
-                        postImagethumb = (postDictHome.objectForKey("userThumb") as? String)!
-                        let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("UserProfile") as! UserProfileViewController;
-                        self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
-        }
-            
-        else if(url == NSURL(string: "action://dish/\("dishName")")){
-            selectedDishHome = ratingValue.objectForKey("dishName") as! String
-                        arrDishList.removeAllObjects()
-                        comingFrom = "HomeDish"
-                        comingToDish = selectedDishHome
-                        //     self.backButton?.hidden = false
-                        let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("DishProfile") as! DishProfileViewController;
-                        self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
-        }
-            
-        else if(url == NSURL(string: "action://restaurant/\("restaurantName")")){
-                        restaurantProfileId = (ratingValue.objectForKey("checkedInRestaurantId") as? String)!
-            
-                        let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("RestaurantProfile") as! RestaurantProfileViewController;
-                        self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
-        }
-    }
-
-    func setUsersClosestCity()
-    {
-        let geoCoder = CLGeocoder()
-        let location = locationManager?.location
-        geoCoder.reverseGeocodeLocation(location!)
-        {
-            (placemarks, error) -> Void in
-            
-            let placeArray = placemarks as [CLPlacemark]!
-            
-            // Place details
-            var placeMark: CLPlacemark!
-            placeMark = placeArray?[0]
-            
-            // Address dictionary
-           
-            
-            // Location name
-            if let locationName = placeMark.addressDictionary?["Name"] as? NSString
-            {
-                print(locationName)
-            }
-            
-            // Street address
-            if let street = placeMark.addressDictionary?["Thoroughfare"] as? NSString
-            {
-                print(street)
-            }
-            
-            // City
-            if let city = placeMark.addressDictionary?["City"] as? NSString
-            {
-                print(city)
-            }
-            
-            // Zip code
-            if let zip = placeMark.addressDictionary?["ZIP"] as? NSString
-            {
-                print(zip)
-            }
-            
-            // Country
-            if let country = placeMark.addressDictionary?["Country"] as? NSString
-            {
-                print(country)
-            }
-        }
-    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
