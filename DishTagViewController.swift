@@ -11,15 +11,15 @@ import UIKit
 var dishNameSelected = String()
 var isComingFromDishTag = false
 
-class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate {
+class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UITabBarControllerDelegate, UISearchBarDelegate {
     
-    @IBOutlet var imageView : UIImageView?
-    @IBOutlet var txtDishName : UITextField?
+
     var filtered : NSArray = []
     var searchActive : Bool = false
-    var tableView = UITableView()
+    @IBOutlet var tableView : UITableView?
      let lblDishName = UILabel()
     let imgDish = UIImageView()
+    var searchBar = UISearchBar()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,23 +27,31 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         // Do any additional setu
         self.title = "Dish Name"
         Flurry.logEvent("Dish Tag Screen")
-        imageView?.image = imageSelected
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .Plain, target: self, action: #selector(DishTagViewController.addTapped))
-        navigationItem.rightBarButtonItem?.enabled = false
-        UITextField.appearance().tintColor = UIColor.blackColor()
+     
         
-        txtDishName!.autocorrectionType = UITextAutocorrectionType.Yes
-        txtDishName?.keyboardType = UIKeyboardType.ASCIICapable
+        UITextField.appearance().tintColor = UIColor.blackColor()
         self.tabBarController?.delegate = self
+        
+        searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
+        searchBar.backgroundColor = UIColor.clearColor()
+        searchBar.placeholder = "Search Dish"
+        
+        self.navigationItem.titleView = searchBar
+        searchBar.delegate = self
+        
+        searchBar.returnKeyType = UIReturnKeyType.Go
+        
+        let textFieldInsideSearchBar = searchBar.valueForKey("searchField") as? UITextField
+        
+        textFieldInsideSearchBar?.textColor = colorSnow
+        textFieldInsideSearchBar?.backgroundColor = UIColor.clearColor()
     }
     
     override func viewDidAppear(animated: Bool) {
-        txtDishName?.becomeFirstResponder()
-        self.view.frame.origin.y -= 130
+   
     }
     
     func addTapped(){
-        dishNameSelected = (txtDishName?.text)!
         let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("RatingVC") as! RatingViewController;
         self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
     }
@@ -70,58 +78,133 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         return true
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
+    
+//    func textFieldDidBeginEditing(textField: UITextField) {
+//        searchActive = true;
+//        tableView = UITableView()
+//        tableView!.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height)
+//        tableView!.dataSource = self
+//        tableView!.delegate = self
+//        tableView!.hidden = true
+//        self.view.addSubview(tableView!)
+//
+//    }
+    
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         searchActive = true;
         tableView = UITableView()
-        tableView.frame = CGRectMake(0, 190, self.view.frame.size.width, imageView!.frame.size.height - 112)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.hidden = true
-        self.view.addSubview(tableView)
-        
-      //  textField.text = ""
+        tableView!.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height)
+        tableView!.dataSource = self
+        tableView!.delegate = self
+        tableView!.hidden = true
+        self.view.addSubview(tableView!)
     }
 
-    func textFieldDidEndEditing(textField: UITextField) {
+//    func textFieldDidEndEditing(textField: UITextField) {
+//        searchActive = false
+//    }
+    
+    func searchBarTextDidEndEditing(searchBar: UISearchBar) {
         searchActive = false
     }
 
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        
+//    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+//        
+//        if(range.length + range.location < 32){
+//            
+//            if string.characters.count == 0 && range.length > 0 {
+//                // Back pressed
+//                return true
+//            }
+//            
+//            if((textField.text?.characters.count)! + (string.characters.count - range.length) < 1){
+//                tableView!.hidden = true
+//            }
+//            else{
+//               tableView!.hidden = false
+//            }
+//            
+//            
+//        if(NSString(string: textField.text!).length > 3){
+//            navigationItem.rightBarButtonItem?.enabled = true
+//        }
+//        else{
+//            navigationItem.rightBarButtonItem?.enabled = false
+//        }
+//        if(NSString(string: textField.text!).length < 2){
+//            navigationItem.rightBarButtonItem?.enabled = false
+//        }
+//        else{
+//            navigationItem.rightBarButtonItem?.enabled = true
+//        }
+//        
+//        let aSet = NSCharacterSet(charactersInString:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ").invertedSet
+//        let compSepByCharInSet = string.componentsSeparatedByCharactersInSet(aSet)
+//        let numberFiltered = compSepByCharInSet.joinWithSeparator("")
+//        
+//        
+//            let searchPredicate = NSPredicate(format: "SELF CONTAINS[cd] %@", textField.text!.stringByAppendingString(numberFiltered))
+//            let array = (arrDishNameList).filteredArrayUsingPredicate(searchPredicate)
+//            
+//            filtered = []
+//            filtered = array
+//            
+//            if(filtered.count == 0){
+//                searchActive = false;
+//            } else {
+//                searchActive = true;
+//            }
+//            self.tableView!.reloadData()
+//     
+//        textField.text = (textField.text! as NSString).stringByReplacingCharactersInRange(range, withString: numberFiltered.lowercaseString)
+//        
+//        return false
+//        }
+//        else{
+//            tableView!.hidden = true
+//        }
+//        if string.characters.count == 0 && range.length > 0 {
+//            // Back pressed
+//            return true
+//        }
+//        return false
+//    }
+    
+    func searchBar(searchBar: UISearchBar, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         if(range.length + range.location < 32){
             
-            if string.characters.count == 0 && range.length > 0 {
+            if text.characters.count == 0 && range.length > 0 {
                 // Back pressed
                 return true
             }
             
-            if((textField.text?.characters.count)! + (string.characters.count - range.length) < 1){
-                tableView.hidden = true
+            if((searchBar.text?.characters.count)! + (text.characters.count - range.length) < 1){
+                tableView!.hidden = true
             }
             else{
-               tableView.hidden = false
+                tableView!.hidden = false
             }
             
             
-        if(NSString(string: textField.text!).length > 3){
-            navigationItem.rightBarButtonItem?.enabled = true
-        }
-        else{
-            navigationItem.rightBarButtonItem?.enabled = false
-        }
-        if(NSString(string: textField.text!).length < 2){
-            navigationItem.rightBarButtonItem?.enabled = false
-        }
-        else{
-            navigationItem.rightBarButtonItem?.enabled = true
-        }
-        
-        let aSet = NSCharacterSet(charactersInString:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ").invertedSet
-        let compSepByCharInSet = string.componentsSeparatedByCharactersInSet(aSet)
-        let numberFiltered = compSepByCharInSet.joinWithSeparator("")
-        
-        
-            let searchPredicate = NSPredicate(format: "SELF CONTAINS[cd] %@", textField.text!.stringByAppendingString(numberFiltered))
+            if(NSString(string: searchBar.text!).length > 3){
+                navigationItem.rightBarButtonItem?.enabled = true
+            }
+            else{
+                navigationItem.rightBarButtonItem?.enabled = false
+            }
+            if(NSString(string: searchBar.text!).length < 2){
+                navigationItem.rightBarButtonItem?.enabled = false
+            }
+            else{
+                navigationItem.rightBarButtonItem?.enabled = true
+            }
+            
+            let aSet = NSCharacterSet(charactersInString:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ").invertedSet
+            let compSepByCharInSet = text.componentsSeparatedByCharactersInSet(aSet)
+            let numberFiltered = compSepByCharInSet.joinWithSeparator("")
+            
+            
+            let searchPredicate = NSPredicate(format: "SELF CONTAINS[cd] %@", searchBar.text!.stringByAppendingString(numberFiltered))
             let array = (arrDishNameList).filteredArrayUsingPredicate(searchPredicate)
             
             filtered = []
@@ -132,29 +215,38 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
             } else {
                 searchActive = true;
             }
-            self.tableView.reloadData()
-     //    let selectedRange: UITextRange? = textField.selectedTextRange
-        textField.text = (textField.text! as NSString).stringByReplacingCharactersInRange(range, withString: numberFiltered.lowercaseString)
-        
-        return false
+            self.tableView!.reloadData()
+            
+            searchBar.text = (searchBar.text! as NSString).stringByReplacingCharactersInRange(range, withString: numberFiltered.lowercaseString)
+            
+            return false
         }
         else{
-            tableView.hidden = true
+            tableView!.hidden = true
         }
-        if string.characters.count == 0 && range.length > 0 {
+        if text.characters.count == 0 && range.length > 0 {
             // Back pressed
             return true
         }
+        tableView?.reloadData()
         return false
     }
 
     //MARK:- tableViewDatasourceDelegates
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(filtered.count == 0){
-            return 1
+        if(searchActive == false){
+            return arrDishNameList.count
         }
-        return filtered.count
+        else{
+            if(filtered.count > 0){
+               return filtered.count
+            }
+            else{
+                return 1
+            }
+        
+        }
     }
     
     func  tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
@@ -165,7 +257,7 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         }
         
        
-        lblDishName.frame = CGRectMake(43, 0, cell.frame.size.width - 43, 44)
+        lblDishName.frame = CGRectMake(53, 0, cell.frame.size.width - 43, 44)
         lblDishName.textColor = UIColor.darkGrayColor()
         lblDishName.lineBreakMode = NSLineBreakMode.ByWordWrapping
         lblDishName.numberOfLines = 0
@@ -173,7 +265,7 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         lblDishName.tag = 1101
         
         
-        imgDish.frame = CGRectMake(10, 9, 25, 25)
+        imgDish.frame = CGRectMake(20, 9, 25, 25)
         imgDish.tag = 1333
         imgDish.image = UIImage(named: "Add dish.png")
         imgDish.layer.cornerRadius = 5
@@ -182,9 +274,9 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         
         if(searchActive){
             if(filtered.count == 0){
-                if(txtDishName?.text?.characters.count > 0){
+                if(searchBar.text?.characters.count > 0){
                 cell.textLabel?.text = ""
-                lblDishName.text = String(format: "Add '%@'", (txtDishName?.text)!)
+                lblDishName.text = String(format: "Add '%@'", (searchBar.text)!)
                 
                 if((cell.contentView.viewWithTag(1101)) != nil){
                     cell.contentView.viewWithTag(1101)?.removeFromSuperview()
@@ -204,15 +296,23 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
           
         }
         else{
+            
+            if(searchBar.text?.characters.count == 0){
+                cell.textLabel?.text = arrDishNameList.objectAtIndex(indexPath.row) as? String
+            }
+            
+            else{
+                
             if(filtered.count == 0){
-                if(txtDishName?.text?.characters.count > 0){
+                if(searchBar.text?.characters.count > 0){
                 cell.textLabel?.text = ""
-                    lblDishName.text = String(format: "Add '%@'", (txtDishName?.text)!)
+                    lblDishName.text = String(format: "Add '%@'", (searchBar.text)!)
                     
                 
                 cell.contentView.addSubview(lblDishName)
                     cell.contentView.addSubview(imgDish)
                 }
+            }
             }
         }
         
@@ -223,10 +323,10 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         
         if(filtered.count > 0){
         dishNameSelected = filtered.objectAtIndex(indexPath.row) as! String
-        txtDishName?.text = (filtered.objectAtIndex(indexPath.row) as! String).stringByReplacingCharactersInRange(dishNameSelected.rangeOfString(dishNameSelected)!, withString: dishNameSelected.lowercaseString)
+    //    txtDishName?.text = (filtered.objectAtIndex(indexPath.row) as! String).stringByReplacingCharactersInRange(dishNameSelected.rangeOfString(dishNameSelected)!, withString: dishNameSelected.lowercaseString)
         }
         else{
-         dishNameSelected = (txtDishName?.text)!
+         dishNameSelected = (searchBar.text)!
             let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("RatingVC") as! RatingViewController;
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
         }

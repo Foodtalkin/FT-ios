@@ -24,7 +24,6 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
     @IBOutlet var txtCity : UITextField?
     @IBOutlet var txtCty : UITextField?
     
-    
     var arrLocations = NSMutableArray()
     
     var params = NSMutableDictionary()
@@ -93,7 +92,7 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
         self.navigationItem.leftBarButtonItem = myCustomBackButtonItem
     }
     
-    func popToRoot(_ sender:UIBarButtonItem){
+    func popToRoot(sender:UIBarButtonItem){
         if(viewCity?.hidden == false){
             viewCity?.hidden = true
             viewAll?.hidden = false

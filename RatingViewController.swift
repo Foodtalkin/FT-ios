@@ -22,7 +22,7 @@ class RatingViewController: UIViewController, FloatRatingViewDelegate, UITabBarC
         // Do any additional setup after loading the view.
         self.title = "Rating"
         Flurry.logEvent("Rating Screen")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Rate Later", style: .Plain, target: self, action: #selector(RatingViewController.addTapped))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Rate Later", style: .Plain, target: self, action: #selector(RatingViewController.addTapped))
         imgView?.image = imageSelected
         
         self.floatRatingView.emptyImage = UIImage(named: "stars-02.png")

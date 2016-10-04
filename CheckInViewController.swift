@@ -120,26 +120,26 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         
         self.refreshControl.endRefreshing()
         searchBar.text = ""
-        if(isComingFromDishTag == true){
-         //   imagePicker.removeFromParentViewController()
-            loaderView.hidden = true
-            self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.5)
-            callInt = 0
-            self.restaurantDetails = NSMutableArray()
-            self.restaurentNameList = NSMutableArray()
-            isComingFromDishTag = false
-            isImageClicked = false
-        }
-        else if(isCameraCancel == true){
-            loaderView.hidden = true
-            self.tabBarController?.tabBar.hidden = false
-            self.tabBarController?.tabBar.translucent = false
-            self.navigationController?.navigationBarHidden = false
-            UIApplication.sharedApplication().statusBarHidden = false
-            isCameraCancel = false
-            self.performSelector(#selector(CheckInViewController.callDelay), withObject: nil, afterDelay: 0.2)
-        }
-        else{
+//        if(isComingFromDishTag == true){
+//         //   imagePicker.removeFromParentViewController()
+//            loaderView.hidden = true
+//            self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.5)
+//            callInt = 0
+//            self.restaurantDetails = NSMutableArray()
+//            self.restaurentNameList = NSMutableArray()
+//            isComingFromDishTag = false
+//            isImageClicked = false
+//        }
+//        else if(isCameraCancel == true){
+//            loaderView.hidden = true
+//            self.tabBarController?.tabBar.hidden = false
+//            self.tabBarController?.tabBar.translucent = false
+//            self.navigationController?.navigationBarHidden = false
+//            UIApplication.sharedApplication().statusBarHidden = false
+//            isCameraCancel = false
+//            self.performSelector(#selector(CheckInViewController.callDelay), withObject: nil, afterDelay: 0.2)
+//        }
+//        else{
             selectedTabBarIndex = 2
             
             searchActive = false
@@ -213,15 +213,9 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
                 
             }
             else{
-              //  if(restaurentNameList.count > 0){
-                  //  loaderView.hidden = true
                     callInt = 0
                     addLocationManager()
-
-           //     }
             }
-            
-        }
         
         tableView?.reloadData()
     }
@@ -1051,9 +1045,9 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
 //    }
     
     func tabBarController(tabBarController: UITabBarController, didSelectViewController viewController: UIViewController) {
-                if (!(viewController.isEqual(CheckInViewController))) {
-                self.navigationController?.popToRootViewControllerAnimated(true)
-                }
+        
+        self.navigationController?.popToRootViewControllerAnimated(false)
+        
     }
     
     //MARK:- TTTAttributedLabelDelegates

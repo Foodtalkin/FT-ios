@@ -1778,9 +1778,9 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
         selectedTabBarIndex = 0
         }
         if(tabBarController.selectedIndex == 2){
-          self.navigationController?.popToRootViewControllerAnimated(true)
+          self.navigationController?.popToRootViewControllerAnimated(false)
         }
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        self.navigationController?.popToRootViewControllerAnimated(false)
     }
     
     //MARK:- TTTAttributedLabelDelegates
