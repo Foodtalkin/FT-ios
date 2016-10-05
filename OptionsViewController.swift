@@ -66,7 +66,7 @@ class OptionsViewController: UIViewController, UITableViewDataSource, UITableVie
             
             let emailTitle = "Contact Us"
             let messageBody = ""
-            let toRecipents = ["info@foodtalkindia.com"]
+            let toRecipents = ["contact@foodtalkindia.com"]
             let mc: MFMailComposeViewController = MFMailComposeViewController()
             if (MFMailComposeViewController.canSendMail()) {
             mc.mailComposeDelegate = self

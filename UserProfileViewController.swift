@@ -78,17 +78,6 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             navTitleLabel.font = UIFont(name: fontBold, size: 15)
             navigationItem.titleView = navTitleLabel
         }
-        
-        if let navigationBar = self.navigationController?.navigationBar {
-//            let firstFrame = CGRect(x: 0, y: 28, width: navigationBar.frame.size.width , height: 17)
-            
-//            firstLabel = UILabel(frame: firstFrame)
-//            
-//            firstLabel.textColor = UIColor(red: 4/255.0, green: 209/255.0, blue: 205/255.0, alpha: 1)
-//            firstLabel.textAlignment = NSTextAlignment.Center
-//            firstLabel.font = UIFont(name: fontName, size: 10)
-//            navigationBar.addSubview(firstLabel)
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -350,11 +339,9 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             else{
                 self.collectionView.frame = CGRectMake(0, 0, tableView.frame.size.width,CGFloat (1) * self.collectionView.frame.size.width / 3)
             }
-          //  dispatch_async(dispatch_get_main_queue()) {
-        //    self.collectionView.reloadItemsAtIndexPaths(self.collectionView.indexPathsForVisibleItems())
-          //  }
+         
             return cell
-            }
+        }
         
         
     }

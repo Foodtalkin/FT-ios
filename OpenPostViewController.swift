@@ -279,11 +279,6 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-//        var cell = tableView.dequeueReusableCellWithIdentifier("CELL") as UITableViewCell!
-//        if (cell == nil) {
-//            cell = UITableViewCell(style:.Default, reuseIdentifier: "CELL")
-//        }
-        
         
         if(indexPath.row == 0){
           var cell = tableView.dequeueReusableCellWithIdentifier("CardCell") as! CardViewCell!
@@ -328,16 +323,45 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
             cell.imageProfilePicture?.layer.masksToBounds = true
                 
                 
-                var status = String(format: "%@ is having %@ at %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
+//                var status = String(format: "%@ is having %@ at %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
+//                
+//                let lengthRestaurantname = (dictInfoPost.objectForKey("restaurantName") as! String).characters.count
+//                
+//                if(lengthRestaurantname < 1){
+//                    status = String(format: "%@ is having %@ %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
+//                }
+//                else{
+//                   status = String(format: "%@ is having %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("restaurantRegion") as! String)
+//                }
                 
-                let lengthRestaurantname = (dictInfoPost.objectForKey("restaurantName") as! String).characters.count
-                
-                if(lengthRestaurantname < 1){
-                    status = String(format: "%@ is having %@ %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
+                var status = ""
+                var lengthRestaurantname = 0
+                lengthRestaurantname = (dictInfoPost.objectForKey("restaurantName") as! String).characters.count
+                var lengthRegion = 0
+                if((dictInfoPost.objectForKey("region")) != nil){
+                lengthRegion = (dictInfoPost.objectForKey("region") as! String).characters.count
                 }
-                else{
-                   status = String(format: "%@ is having %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("restaurantRegion") as! String)
+                if(dictInfoPost.count > 0){
+                    if(lengthRestaurantname > 1){
+                        if(lengthRegion > 1){
+                            status = String(format: "%@ is having %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("region") as! String)
+                        }
+                        else{
+                            status = String(format: "%@ is having %@ at %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
+                        }
+                    }
+                    
+                    if(lengthRestaurantname < 1){
+                        if(lengthRegion > 1){
+                            status = String(format: "%@ is having %@ %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String, dictInfoPost.objectForKey("region") as! String)
+                        }
+                        else{
+                            status = String(format: "%@ is having %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                        }
+                    }
+                    
                 }
+
                 
                 
                 cell.labelStatus?.text = status
@@ -356,14 +380,39 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
                 let url1 = NSURL(string: "action://dish/\(trimmedString)")!
                 cell.labelStatus!.addLinkToURL(url1, withRange: range1)
                 
+//                if(dictInfoPost.objectForKey("restaurantIsActive") as! String == "1"){
+//                cell.labelStatus?.attributedTruncationToken = NSAttributedString(string: dictInfoPost.objectForKey("restaurantName") as! String, attributes: nil)
+//                let nsString2 = status as NSString
+//                let range2 = nsString2.rangeOfString(dictInfoPost.objectForKey("restaurantName") as! String)
+//                let trimmedString1 = "restaurantName"
+//                let url2 = NSURL(string: "action://restaurant/\(trimmedString1)")!
+//                cell.labelStatus!.addLinkToURL(url2, withRange: range2)
+//            }
+                
+                
                 if(dictInfoPost.objectForKey("restaurantIsActive") as! String == "1"){
-                cell.labelStatus?.attributedTruncationToken = NSAttributedString(string: dictInfoPost.objectForKey("restaurantName") as! String, attributes: nil)
-                let nsString2 = status as NSString
-                let range2 = nsString2.rangeOfString(dictInfoPost.objectForKey("restaurantName") as! String)
-                let trimmedString1 = "restaurantName"
-                let url2 = NSURL(string: "action://restaurant/\(trimmedString1)")!
-                cell.labelStatus!.addLinkToURL(url2, withRange: range2)
-            }
+                    
+                    cell.labelStatus?.attributedTruncationToken = NSAttributedString(string: (dictInfoPost.objectForKey("restaurantName") as? String)!, attributes: nil)
+                    let nsString2 = status as NSString
+                    let length1 = nsString2.length
+                    let length2 = (dictInfoPost.objectForKey("restaurantName") as? String)?.characters.count
+                    //  let range2 = NSRange(location: length1 - length2!, length: length2!)
+                    let city = dictInfoPost.objectForKey("region") as! String
+                    
+                    var str1 = String()
+                    if(city.characters.count > 0){
+                        str1   = String(format: "%@, %@", dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("region") as! String)
+                    }
+                    else{
+                        str1   = String(format: "%@", dictInfoPost.objectForKey("restaurantName") as! String)
+                    }
+                    let range2 = nsString1.rangeOfString(str1)
+                    
+                    let trimmedString1 = "restaurantName"
+                    let url2 = NSURL(string: "action://restaurant/\(trimmedString1)")!
+                    cell.labelStatus!.addLinkToURL(url2, withRange: range2)
+                }
+                
                 cell.labelStatus?.delegate = self
                 cell.labelStatus?.tag = indexPath.row
                 
@@ -464,63 +513,6 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
             else{
                 userPicUrl = self.arrCommentsList.objectAtIndex(indexPath.row - 1).objectForKey("userImage") as! String
             }
-            
-//            let imgUser = UIImageView()
-//            imgUser.frame = CGRectMake(12, 10, 39, 39)
-//            imgUser.tag = 13334
-//            dispatch_async(dispatch_get_main_queue()) {
-//            imgUser.hnk_setImageFromURL(NSURL(string: userPicUrl)!)
-//            }
-//            
-//            
-//            imgUser.layer.cornerRadius = 19
-//            imgUser.layer.masksToBounds = true
-            
-            
-//            let btnUserName = UIButton()
-//            btnUserName.frame = CGRectMake(12, 10, 70, 16)
-//            btnUserName.titleLabel?.font = UIFont(name: fontBold, size: 16)
-//            if((dictInfoPost.objectForKey("tip") as? String)?.characters.count > 0){
-//            btnUserName.tag = 111112
-//            }
-//            else{
-//            btnUserName.tag = 111112
-//            }
-//            btnUserName.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
-//            btnUserName.setTitleColor(UIColor(red: 3/255, green: 105/255, blue: 219/255, alpha: 1.0), forState: UIControlState.Normal)
-//            btnUserName.titleLabel?.textAlignment = NSTextAlignment.Left
-//            
-//            if((dictInfoPost.objectForKey("tip") as? String)?.characters.count > 0){
-//                btnUserName.setTitle(arrCommentsList.objectAtIndex(indexPath.row - 2).objectForKey("userName") as? String, forState: UIControlState.Normal)
-//            }
-//            else{
-//                btnUserName.setTitle(arrCommentsList.objectAtIndex(indexPath.row - 1).objectForKey("userName") as? String, forState: UIControlState.Normal)
-//            }
-           
-            
-            
-//            let btnFullName = UIButton()
-//            btnFullName.frame = CGRectMake(60, 30, 150, 14)
-//            btnFullName.titleLabel?.font = UIFont(name: fontName, size: 15)
-//            if((dictInfoPost.objectForKey("tip") as? String)?.characters.count > 0){
-//            btnFullName.tag = 222223
-//            }
-//            else{
-//            btnFullName.tag = 222223
-//            }
-//            btnFullName.contentHorizontalAlignment = UIControlContentHorizontalAlignment.Left
-//            btnFullName.setTitleColor(UIColor(red: 3/255, green: 105/255, blue: 219/255, alpha: 1.0), forState: UIControlState.Normal)
-//            if((dictInfoPost.objectForKey("tip") as? String)?.characters.count > 0){
-//            btnFullName.setTitle(arrCommentsList.objectAtIndex(indexPath.row - 2).objectForKey("fullName") as? String, forState: UIControlState.Normal)
-//            }
-//            else{
-//            btnFullName.setTitle(arrCommentsList.objectAtIndex(indexPath.row - 1).objectForKey("fullName") as? String, forState: UIControlState.Normal)
-//            }
-            
-//            let lblTime = UILabel()
-//            lblTime.frame = CGRectMake(tableView.frame.size.width - 30, 10, 30, 20)
-//            lblTime.textColor = UIColor.grayColor()
-//            lblTime.font = UIFont(name: fontName, size: 13)
 //          
             var commentTime = String()
             if((dictInfoPost.objectForKey("tip") as? String)?.characters.count > 0){
@@ -1394,39 +1386,39 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
         if(dictInfoPost.count > 0){
         let rateValue = dictInfoPost.objectForKey("rating") as! String
             if(rateValue == "1"){
-                cell.star1?.image = UIImage(named: "stars-01.png")
-                cell.star2?.image = UIImage(named: "stars-02.png")
-                cell.star3?.image = UIImage(named: "stars-02.png")
-                cell.star4?.image = UIImage(named: "stars-02.png")
-                cell.star5?.image = UIImage(named: "stars-02.png")
-            }
-            else if(rateValue == "2"){
-                cell.star1?.image = UIImage(named: "stars-01.png")
-                cell.star2?.image = UIImage(named: "stars-01.png")
-                cell.star3?.image = UIImage(named: "stars-02.png")
-                cell.star4?.image = UIImage(named: "stars-02.png")
-                cell.star5?.image = UIImage(named: "stars-02.png")
-            }
-            else if(rateValue == "3"){
-                cell.star1?.image = UIImage(named: "stars-01.png")
-                cell.star2?.image = UIImage(named: "stars-01.png")
-                cell.star3?.image = UIImage(named: "stars-01.png")
-                cell.star4?.image = UIImage(named: "stars-02.png")
-                cell.star5?.image = UIImage(named: "stars-02.png")
-            }
-            else if(rateValue == "4"){
-                cell.star1?.image = UIImage(named: "stars-01.png")
-                cell.star2?.image = UIImage(named: "stars-01.png")
-                cell.star3?.image = UIImage(named: "stars-01.png")
-                cell.star4?.image = UIImage(named: "stars-01.png")
-                cell.star5?.image = UIImage(named: "stars-02.png")
-            }
-            else if(rateValue == "5"){
-                cell.star1?.image = UIImage(named: "stars-01.png")
+                cell.star1?.image = UIImage(named: "stars-02.png")
                 cell.star2?.image = UIImage(named: "stars-01.png")
                 cell.star3?.image = UIImage(named: "stars-01.png")
                 cell.star4?.image = UIImage(named: "stars-01.png")
                 cell.star5?.image = UIImage(named: "stars-01.png")
+            }
+            else if(rateValue == "2"){
+                cell.star1?.image = UIImage(named: "stars-02.png")
+                cell.star2?.image = UIImage(named: "stars-02.png")
+                cell.star3?.image = UIImage(named: "stars-01.png")
+                cell.star4?.image = UIImage(named: "stars-01.png")
+                cell.star5?.image = UIImage(named: "stars-01.png")
+            }
+            else if(rateValue == "3"){
+                cell.star1?.image = UIImage(named: "stars-02.png")
+                cell.star2?.image = UIImage(named: "stars-02.png")
+                cell.star3?.image = UIImage(named: "stars-02.png")
+                cell.star4?.image = UIImage(named: "stars-01.png")
+                cell.star5?.image = UIImage(named: "stars-01.png")
+            }
+            else if(rateValue == "4"){
+                cell.star1?.image = UIImage(named: "stars-02.png")
+                cell.star2?.image = UIImage(named: "stars-02.png")
+                cell.star3?.image = UIImage(named: "stars-02.png")
+                cell.star4?.image = UIImage(named: "stars-02.png")
+                cell.star5?.image = UIImage(named: "stars-01.png")
+            }
+            else if(rateValue == "5"){
+                cell.star1?.image = UIImage(named: "stars-02.png")
+                cell.star2?.image = UIImage(named: "stars-02.png")
+                cell.star3?.image = UIImage(named: "stars-02.png")
+                cell.star4?.image = UIImage(named: "stars-02.png")
+                cell.star5?.image = UIImage(named: "stars-02.png")
             }
         }
     }

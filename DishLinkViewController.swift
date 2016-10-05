@@ -548,39 +548,39 @@ class DishLinkViewController: UIViewController, iCarouselDataSource, iCarouselDe
             
             let rateValue = self.dishLinkArray.objectAtIndex(index).objectForKey("rating") as! String
             if(rateValue == "1"){
-                self.star1?.image = UIImage(named: "stars-01.png")
-                self.star2?.image = UIImage(named: "stars-02.png")
-                self.star3?.image = UIImage(named: "stars-02.png")
-                self.star4?.image = UIImage(named: "stars-02.png")
-                self.star5?.image = UIImage(named: "stars-02.png")
-            }
-            else if(rateValue == "2"){
-                self.star1?.image = UIImage(named: "stars-01.png")
-                self.star2?.image = UIImage(named: "stars-01.png")
-                self.star3?.image = UIImage(named: "stars-02.png")
-                self.star4?.image = UIImage(named: "stars-02.png")
-                self.star5?.image = UIImage(named: "stars-02.png")
-            }
-            else if(rateValue == "3"){
-                self.star1?.image = UIImage(named: "stars-01.png")
-                self.star2?.image = UIImage(named: "stars-01.png")
-                self.star3?.image = UIImage(named: "stars-01.png")
-                self.star4?.image = UIImage(named: "stars-02.png")
-                self.star5?.image = UIImage(named: "stars-02.png")
-            }
-            else if(rateValue == "4"){
-                self.star1?.image = UIImage(named: "stars-01.png")
-                self.star2?.image = UIImage(named: "stars-01.png")
-                self.star3?.image = UIImage(named: "stars-01.png")
-                self.star4?.image = UIImage(named: "stars-01.png")
-                self.star5?.image = UIImage(named: "stars-02.png")
-            }
-            else if(rateValue == "5"){
-                self.star1?.image = UIImage(named: "stars-01.png")
+                self.star1?.image = UIImage(named: "stars-02.png")
                 self.star2?.image = UIImage(named: "stars-01.png")
                 self.star3?.image = UIImage(named: "stars-01.png")
                 self.star4?.image = UIImage(named: "stars-01.png")
                 self.star5?.image = UIImage(named: "stars-01.png")
+            }
+            else if(rateValue == "2"){
+                self.star1?.image = UIImage(named: "stars-02.png")
+                self.star2?.image = UIImage(named: "stars-02.png")
+                self.star3?.image = UIImage(named: "stars-01.png")
+                self.star4?.image = UIImage(named: "stars-01.png")
+                self.star5?.image = UIImage(named: "stars-01.png")
+            }
+            else if(rateValue == "3"){
+                self.star1?.image = UIImage(named: "stars-02.png")
+                self.star2?.image = UIImage(named: "stars-02.png")
+                self.star3?.image = UIImage(named: "stars-02.png")
+                self.star4?.image = UIImage(named: "stars-01.png")
+                self.star5?.image = UIImage(named: "stars-01.png")
+            }
+            else if(rateValue == "4"){
+                self.star1?.image = UIImage(named: "stars-02.png")
+                self.star2?.image = UIImage(named: "stars-02.png")
+                self.star3?.image = UIImage(named: "stars-02.png")
+                self.star4?.image = UIImage(named: "stars-02.png")
+                self.star5?.image = UIImage(named: "stars-01.png")
+            }
+            else if(rateValue == "5"){
+                self.star1?.image = UIImage(named: "stars-02.png")
+                self.star2?.image = UIImage(named: "stars-02.png")
+                self.star3?.image = UIImage(named: "stars-02.png")
+                self.star4?.image = UIImage(named: "stars-02.png")
+                self.star5?.image = UIImage(named: "stars-02.png")
             }
             
             let footerView = UIView()

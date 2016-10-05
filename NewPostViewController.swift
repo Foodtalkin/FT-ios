@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
     
     @IBOutlet var imgDish : UIImageView?
     @IBOutlet var floatRatingView: FloatRatingView!
@@ -24,6 +24,11 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
     var error: NSError?
     var imagePicker1 = UIImagePickerController()
     var isImageClicked : Bool = false
+    
+    var imgFullImage = UIImageView()
+    var viewFullImage = UIView()
+    var fullImage = String()
+    var isFullPressed = Bool()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +44,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         
-        txtReview!.autocorrectionType = UITextAutocorrectionType.No
+     //   txtReview!.autocorrectionType = UITextAutocorrectionType.No
         
         btnSharePost = UIButton()
         btnSharePost.frame = CGRectMake(0, self.view.frame.size.height - 45, self.view.frame.size.width, 45)
@@ -54,11 +59,18 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.leftBarButtonItem = barButton
+        
+        imgDish?.userInteractionEnabled = true
+        isFullPressed = false
+        imageEnlargeSetting()
     }
     
     override func viewWillAppear(animated: Bool) {
         self.tabBarController?.tabBar.hidden = true
         if(isImageClicked == false){
+            selectedRestaurantName = ""
+            dishNameSelected = ""
+            restaurantId = ""
             imgDish?.image = UIImage(named: "placeholder.png")
             btnAddDish?.setTitle("Add a dish", forState: UIControlState.Normal)
             btnRestaurant?.setTitle("Checkin", forState: UIControlState.Normal)
@@ -94,7 +106,60 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
     }
     
     func backPressed(){
+        if(isFullPressed == true){
+            imageSmall()
+        }
+        else{
         openPost()
+        }
+    }
+    
+    func imageEnlargeSetting(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UserProfileViewController.imageFull))
+        tap.numberOfTapsRequired = 1
+        imgDish!.tag = 100012
+        imgDish!.addGestureRecognizer(tap)
+        
+        viewFullImage.frame = CGRectMake(imgDish!.frame.origin.x + imgDish!.frame.size.width/2, imgDish!.frame.origin.y + imgDish!.frame.size.height/2, 1, 1)
+        viewFullImage.userInteractionEnabled = true
+        viewFullImage.backgroundColor = UIColor.clearColor()
+        self.view.addSubview(viewFullImage)
+        
+        let blurEffect1 = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let blurEffectView1 = UIVisualEffectView(effect: blurEffect1)
+        blurEffectView1.frame = viewFullImage.bounds
+        blurEffectView1.autoresizingMask = [.FlexibleWidth, .FlexibleHeight] // for supporting device rotation
+        viewFullImage.addSubview(blurEffectView1)
+        
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(UserProfileViewController.imageSmall))
+        tap1.numberOfTapsRequired = 1
+        viewFullImage.tag = 100012
+        viewFullImage.addGestureRecognizer(tap1)
+        
+        self.imgFullImage.contentMode = UIViewContentMode.ScaleAspectFit;
+        
+    }
+    
+    //MARK:- fullImage
+    
+    func imageFull(){
+        isFullPressed = true
+        UIView.animateWithDuration(0.4, animations: {
+            self.viewFullImage.frame = CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height)
+            self.imgFullImage.frame = CGRectMake(0, UIScreen.mainScreen().bounds.size.height/2 - UIScreen.mainScreen().bounds.size.width/2, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.width)
+            
+            self.viewFullImage.addSubview(self.imgFullImage)
+            self.imgFullImage.image = imageSelected
+        })
+    }
+    
+    func imageSmall(){
+        UIView.animateWithDuration(0.4, animations: {
+            self.viewFullImage.frame = CGRectMake(self.imgDish!.frame.origin.x + self.imgDish!.frame.size.width/2, self.imgDish!.frame.origin.y + self.imgDish!.frame.size.height/2, 1, 1)
+            
+            self.imgFullImage.frame = CGRectMake(self.viewFullImage.frame.size.width/2, self.viewFullImage.frame.size.height/2, 0, 0)
+        })
+        isFullPressed = false
     }
     
     //MARK:- Camera Controls methods
@@ -127,7 +192,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
     
     func addOnImagePicker(imagePicker : UIImagePickerController){
         let viewBlack = UIView()
-        viewBlack.frame = CGRect(x: self.view.frame.size.width/2 - 45, y: self.view.frame.size.height - 100, width: self.view.frame.size.width/2 + 40, height: 100)
+        viewBlack.frame = CGRect(x: self.view.frame.size.width/2 - 45, y: self.view.frame.size.height - 85, width: self.view.frame.size.width/2 + 40, height: 85)
         viewBlack.backgroundColor = UIColor.blackColor()
         viewBlack.tag = 10998
         imagePicker.view.addSubview(viewBlack)
@@ -176,12 +241,15 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.tabBarController?.selectedIndex = 0
-        self.tabBarController?.tabBar.hidden = false
-        self.dismissViewControllerAnimated(true, completion: nil)
+            
+                self.isImageClicked = false
+                self.tabBarController?.selectedIndex = 0
+                self.tabBarController?.tabBar.hidden = false
+                self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func cancel(sender : UIButton){
+        isImageClicked = false
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -225,7 +293,6 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         
         isComingFromDishTag = true
         dismissViewControllerAnimated(true, completion: nil)
-        //        self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.5)
     }
     
     func resizeImage(image : UIImage) -> UIImage
@@ -308,7 +375,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             self.view.frame.origin.y = self.view.frame.origin.y - 100
-            self.btnSharePost.frame = CGRect(x: 0, y: self.view.frame.size.height - 116 - 45, width: (self.btnSharePost.frame.size.width), height: (self.btnSharePost.frame.size.height))
+
         })
     }
     
@@ -316,7 +383,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         if(text == "\n") {
             UIView.animateWithDuration(0.3, animations: { () -> Void in
                 self.view.frame.origin.y = self.view.frame.origin.y + 100
-                self.btnSharePost.frame = CGRectMake(0, self.view.frame.size.height - 45, (self.btnSharePost.frame.size.width), (self.btnSharePost.frame.size.height))
+
             })
             
             textView.resignFirstResponder()
@@ -329,28 +396,18 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
     
     @IBAction func sharePostCall(sender : UIButton){
         if(btnAddDish?.titleLabel?.text != "Add a dish"){
-         //   if(btnRestaurant?.titleLabel?.text != "Checkin"){
-                if(self.floatRatingView.rating > 1){
-                    if(txtReview?.text.characters.count > 1){
+         
+                if(self.floatRatingView.rating > 0){
                         isUploadingStart = true
                         isImageClicked = false
                         reviewSelected = (txtReview?.text)!
                         self.tabBarController?.selectedIndex = 0
                         self.tabBarController?.tabBar.hidden = false
                         UIApplication.sharedApplication().statusBarHidden = true
-                    }
-                    else{
-                       self.navigationController?.view.makeToast("Please write a review")
-                    }
-                    
                 }
                 else{
                     self.navigationController?.view.makeToast("Please give rating")
                 }
-//            }
-//            else{
-//                self.navigationController?.view.makeToast("Please checkin")
-//            }
         }
         else{
             self.navigationController?.view.makeToast("Please add a dish")

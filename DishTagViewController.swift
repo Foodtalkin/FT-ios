@@ -46,6 +46,7 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         
         textFieldInsideSearchBar?.textColor = colorSnow
         textFieldInsideSearchBar?.backgroundColor = UIColor.clearColor()
+        searchBar.becomeFirstResponder()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -81,7 +82,7 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
     
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
         //  searchBar.setShowsCancelButton(true, animated: true)
-        searchActive = true;
+        searchActive = false;
     }
     
     func searchBarTextDidEndEditing(searchBar: UISearchBar) {

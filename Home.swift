@@ -84,10 +84,7 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
         }
         Flurry.logEvent("HomeScreen")
         
-        dispatch_async(dispatch_get_main_queue()){
-        self.performSelector(#selector(Home.webServiceCallRating), withObject: nil, afterDelay: 0.1)
         
-        }
         postTableView!.registerNib(UINib(nibName: "CardViewCell", bundle: nil), forCellReuseIdentifier: "CardCell")
       //  postTableView?.backgroundColor = UIColor(red: 20/255, green: 29/255, blue: 46/255, alpha: 1.0)
         postTableView?.backgroundColor = UIColor.whiteColor()
@@ -554,87 +551,14 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
         cell.labelTimeOfPost?.text = differenceDate((arrPostList.objectAtIndex(indexPath.row).objectForKey("createDate") as? String)!)
             }
         
-//        cell.numberOfComments?.text = arrPostList.objectAtIndex(indexPath.row).objectForKey("commentCount") as? String
+
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         
- //       if(indexPath.row != 0){
-            
-//        cell.layer.shadowOffset = CGSizeMake(5, 5);
-//        cell.layer.shadowColor = UIColor.darkGrayColor().CGColor
-//        cell.layer.shadowRadius = 2;
-//        cell.layer.shadowOpacity = 1;
-//        
-//        let shadowFrame = cell.layer.bounds;
-//        let shadowPath = UIBezierPath(rect: shadowFrame).CGPath
-//        cell.layer.shadowPath = shadowPath;
-//        }
-        if(indexPath.row == 0){
-         if(arrPostList.count > 0){
-        if(arrPostList.objectAtIndex(indexPath.row).objectForKey("userId") as! String == NSUserDefaults.standardUserDefaults().objectForKey("userId") as! String){
-            if(arrPostList.objectAtIndex(indexPath.row).objectForKey("rating") as! String == "0"){
-                
-                if(lengthRestaurantname < 1){
-                    status = String(format: "How did you like %@ ?", arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String)
-                }
-                else{
-                    status = String(format: "How did you like %@ at %@ ?", arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String)
-                }
-                cell.labelStatus?.text = status
-                
-                cell.labelStatus?.attributedTruncationToken = NSAttributedString(string: "Rate", attributes: nil)
-                
-                
-                let isContain = cell.contentView.subviews.contains(floatRatingView)
-                if(isContain == true){
-                    
-                }
-                else{
-                    floatRatingView = FloatRatingView()
-                }
-                
-                ratingValue = arrPostList.objectAtIndex(indexPath.row) as! NSDictionary
-                
-                floatRatingView.frame = CGRectMake(10, cell.frame.size.height - 40, cell.frame.size.width - 60, 35)
-                
-                floatRatingView.emptyImage = UIImage(named: "stars-02.png")
-                floatRatingView.fullImage = UIImage(named: "stars-01.png")
-                floatRatingView.tag = indexPath.row
-                // Optional params
-                floatRatingView.delegate = self
-                floatRatingView.contentMode = UIViewContentMode.ScaleAspectFit
-                floatRatingView.maxRating = 5
-                floatRatingView.minRating = 1
-                floatRatingView.rating = 0
-                floatRatingView.editable = true
-                floatRatingView.halfRatings = false
-                floatRatingView.floatRatings = false
-                floatRatingView.backgroundColor = UIColor.whiteColor()
-                
-                
-                cell.star1?.hidden = true
-                cell.star2?.hidden = true
-                cell.star3?.hidden = true
-                cell.star4?.hidden = true
-                cell.star5?.hidden = true
-                
-                cell.contentView.addSubview(floatRatingView)
-                }
-            else{
-                //floatRatingView.removeFromSuperview()
-                }
-            }
-            }
-            else{
-            //    floatRatingView.removeFromSuperview()
-            }
-            cell.blackLabel?.hidden = true
-            }
-        else{
-            cell.blackLabel?.hidden = false
-            }
+
+        
         }
         else{
-         //  floatRatingView.removeFromSuperview()
+         
         }
         
         return cell
@@ -805,39 +729,39 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
     func setRatings(index : Int, cell : CardViewCell){
         let rateValue = arrPostList.objectAtIndex(index).objectForKey("rating")?.intValue
         if(rateValue == 1){
-            cell.star1?.image = UIImage(named: "stars-01.png")
-            cell.star2?.image = UIImage(named: "stars-02.png")
-            cell.star3?.image = UIImage(named: "stars-02.png")
-            cell.star4?.image = UIImage(named: "stars-02.png")
-            cell.star5?.image = UIImage(named: "stars-02.png")
-        }
-        else if(rateValue == 2){
-            cell.star1?.image = UIImage(named: "stars-01.png")
-            cell.star2?.image = UIImage(named: "stars-01.png")
-            cell.star3?.image = UIImage(named: "stars-02.png")
-            cell.star4?.image = UIImage(named: "stars-02.png")
-            cell.star5?.image = UIImage(named: "stars-02.png")
-        }
-        else if(rateValue == 3){
-            cell.star1?.image = UIImage(named: "stars-01.png")
-            cell.star2?.image = UIImage(named: "stars-01.png")
-            cell.star3?.image = UIImage(named: "stars-01.png")
-            cell.star4?.image = UIImage(named: "stars-02.png")
-            cell.star5?.image = UIImage(named: "stars-02.png")
-        }
-        else if(rateValue == 4){
-            cell.star1?.image = UIImage(named: "stars-01.png")
-            cell.star2?.image = UIImage(named: "stars-01.png")
-            cell.star3?.image = UIImage(named: "stars-01.png")
-            cell.star4?.image = UIImage(named: "stars-01.png")
-            cell.star5?.image = UIImage(named: "stars-02.png")
-        }
-        else if(rateValue == 5){
-            cell.star1?.image = UIImage(named: "stars-01.png")
+            cell.star1?.image = UIImage(named: "stars-02.png")
             cell.star2?.image = UIImage(named: "stars-01.png")
             cell.star3?.image = UIImage(named: "stars-01.png")
             cell.star4?.image = UIImage(named: "stars-01.png")
             cell.star5?.image = UIImage(named: "stars-01.png")
+        }
+        else if(rateValue == 2){
+            cell.star1?.image = UIImage(named: "stars-02.png")
+            cell.star2?.image = UIImage(named: "stars-02.png")
+            cell.star3?.image = UIImage(named: "stars-01.png")
+            cell.star4?.image = UIImage(named: "stars-01.png")
+            cell.star5?.image = UIImage(named: "stars-01.png")
+        }
+        else if(rateValue == 3){
+            cell.star1?.image = UIImage(named: "stars-02.png")
+            cell.star2?.image = UIImage(named: "stars-02.png")
+            cell.star3?.image = UIImage(named: "stars-02.png")
+            cell.star4?.image = UIImage(named: "stars-01.png")
+            cell.star5?.image = UIImage(named: "stars-01.png")
+        }
+        else if(rateValue == 4){
+            cell.star1?.image = UIImage(named: "stars-02.png")
+            cell.star2?.image = UIImage(named: "stars-02.png")
+            cell.star3?.image = UIImage(named: "stars-02.png")
+            cell.star4?.image = UIImage(named: "stars-02.png")
+            cell.star5?.image = UIImage(named: "stars-01.png")
+        }
+        else if(rateValue == 5){
+            cell.star1?.image = UIImage(named: "stars-02.png")
+            cell.star2?.image = UIImage(named: "stars-02.png")
+            cell.star3?.image = UIImage(named: "stars-02.png")
+            cell.star4?.image = UIImage(named: "stars-02.png")
+            cell.star5?.image = UIImage(named: "stars-02.png")
         }
         else if(rateValue == 0){
           cell.star1?.hidden = true
@@ -1365,7 +1289,7 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
             let sessionId = NSUserDefaults.standardUserDefaults().objectForKey("sessionId")
             let params = NSMutableDictionary()
             params.setObject(sessionId!, forKey: "sessionId")
-          dispatch_async(dispatch_get_main_queue()){
+            dispatch_async(dispatch_get_main_queue()){
             webServiceCallingPost(url, parameters: params)
             }
             delegate = self
@@ -1422,16 +1346,6 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
             internetMsg(view)
         }
         delegate = self
-    }
-
-    
-    func loadDataPlist(){
-    //    var myArray = NSMutableArray()
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        let path = (paths as NSString).stringByAppendingPathComponent("DishName.plist")
-        let save = NSMutableArray(contentsOfFile: path)
-        arrDishNameList = save!
-        
     }
 
     //MARK:- WebService Delegates
@@ -1513,17 +1427,6 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
             
             arrDishNameList = NSArray()
             arrDishNameList = dishNames
-            
-            if let plistArray = NSMutableArray(contentsOfFile: path) {
-                
-                for(var indx : Int = 0; indx < dishNames.count; indx += 1){
-                    if(!plistArray.containsObject(dishNames.objectAtIndex(indx))){
-                    plistArray.addObject(dishNames.objectAtIndex(indx))
-                    }
-                }
-                plistArray.writeToFile(path, atomically: true)
-                 loadDataPlist()
-            }
         }
             
         else if(dict.objectForKey("api") as! String == "post/getUnreated"){
