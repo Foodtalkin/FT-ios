@@ -131,7 +131,7 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
            // self.progress = 0.0
             viewProcess = UIView()
             viewProcess?.frame = CGRectMake(0, 64, UIScreen.mainScreen().bounds.size.width, 52)
-            viewProcess?.backgroundColor = UIColor.blackColor()
+            viewProcess?.backgroundColor = colorNavigation
             self.view.addSubview(viewProcess!)
             
             prog = 0.0

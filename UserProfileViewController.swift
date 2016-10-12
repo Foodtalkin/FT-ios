@@ -60,10 +60,10 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         self.view.addSubview(activityIndicator1)
         
         tableView?.separatorColor = UIColor.clearColor()
- //       tableView?.backgroundColor = UIColor(red: 21/255.0, green: 29/255.0, blue: 46/255.0, alpha: 1)
+ 
         tableView?.backgroundColor = UIColor.whiteColor()
         tableView!.decelerationRate = UIScrollViewDecelerationRateFast;
-   //     self.view.backgroundColor = UIColor(red: 21/255.0, green: 29/255.0, blue: 46/255.0, alpha: 1)
+        tableView?.scrollsToTop = false
         
         self.navigationController?.interactivePopGestureRecognizer!.delegate = self
 
@@ -78,6 +78,7 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             navTitleLabel.font = UIFont(name: fontBold, size: 15)
             navigationItem.titleView = navTitleLabel
         }
+       
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -85,7 +86,7 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         isFullPressed = false
         userLoginAllInfo =  (NSUserDefaults.standardUserDefaults().objectForKey("LoginDetails") as? NSMutableDictionary)!
         arrNumberOfCard = NSMutableArray()
-    //    firstLabel.hidden = false
+   
         navTitleLabel.hidden = false
         if(isConnectedToNetwork()){
         dispatch_async(dispatch_get_main_queue()) {
@@ -106,12 +107,11 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         if(isUserInfo == true){
             navTitleLabel.text = userLoginAllInfo.objectForKey("profile")?.objectForKey("userName") as? String
             navTitleLabel.sizeToFit()
-//            firstLabel.text = String(format: "%@ Points",(userLoginAllInfo.objectForKey("profile")?.objectForKey("totalPoints") as? String)!)
             self.btnFollow?.hidden = true
             self.navigationItem.rightBarButtonItem = nil
         }
         else{
-          //  self.title = dictProfileInfo.objectForKey("fullName") as? String
+          
                   navTitleLabel.text  = postDictHome.objectForKey("userName") as? String
             navTitleLabel.sizeToFit()
             if(postDictHome.objectForKey("userName") as? String != userLoginAllInfo.objectForKey("profile")?.objectForKey("userName") as? String){
@@ -134,13 +134,11 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
     
     override func viewWillDisappear(animated : Bool) {
         super.viewWillDisappear(animated)
-   //    firstLabel.hidden = true
+   
         navTitleLabel.hidden = true
             cancelRequest()
         if (self.isMovingFromParentViewController()){
-           //   self.tabBarController?.selectedIndex = 0
-            
-        //    self.navigationController?.popViewControllerAnimated(true)
+          
             self.navigationController?.navigationBarHidden = true
         }
     }
@@ -253,7 +251,9 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
             viewFullImage.frame = CGRectMake(cell.profilePic!.frame.origin.x + cell.profilePic!.frame.size.width/2, 114, 1, 1)
             viewFullImage.userInteractionEnabled = true
             viewFullImage.backgroundColor = UIColor.clearColor()
-            self.view.addSubview(viewFullImage)
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            appDelegate.window!.addSubview(viewFullImage)
+        //    UIApplication.sharedApplication().keyWindow!.addSubview(viewFullImage)
             
             let blurEffect1 = UIBlurEffect(style: UIBlurEffectStyle.Dark)
             let blurEffectView1 = UIVisualEffectView(effect: blurEffect1)

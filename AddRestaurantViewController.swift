@@ -110,11 +110,6 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
     
     override func viewWillDisappear(animated: Bool) {
         cancelRequest()
-        if (self.isMovingFromParentViewController()){
-            
-            self.navigationController?.navigationBarHidden = true
-            
-        }
         super.viewWillDisappear(animated)
     }
     
@@ -184,7 +179,16 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
         }
         else{
             if(dict.objectForKey("status") as! String == "OK"){
-                restaurantId = dict.objectForKey("restaurantId") as! String
+                
+                let someString = (dict.objectForKey("restaurantId") as? String)
+                if let myInteger = Int(someString!) {
+                    let myNumber = NSNumber(integer:myInteger)
+                     restaurantId = myNumber
+                } else {
+                    print("'\(someString)' did not convert to an Int")
+                }
+
+               
                 selectedRestaurantName = (txtRestaurantName?.text)!
                 isRestaurantSelect = true
                 self.navigationController?.popToRootViewControllerAnimated(false)
@@ -315,6 +319,7 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
         if ((txtRestaurantName!.text?.characters.count)! < 2){
             btnCheckIn.enabled = false;
             btnCheckIn.alpha = 0.6
+            return textField.text!.characters.count + (string.characters.count - range.length) <= 60
         }
             
         else if (txtCity!.text!.characters.count < 2){
@@ -449,15 +454,6 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
         dictLocations = NSMutableDictionary()
         dictLocations.setObject(long, forKey: "longitute")
         dictLocations.setObject(lat, forKey: "latitude")
-        
-        
-//        if(callInt == 0){
-//            dispatch_async(dispatch_get_main_queue()){
-//                self.setUsersClosestCity()
-//            }
-//            
-//        }
-//        callInt += 1
         
     }
     

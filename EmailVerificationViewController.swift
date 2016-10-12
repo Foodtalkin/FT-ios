@@ -29,7 +29,6 @@ class EmailVerificationViewController: UIViewController, UITextFieldDelegate, We
         txtEmail.keyboardType = UIKeyboardType.EmailAddress
         txtEmail.delegate = self
         let dictName = (NSUserDefaults.standardUserDefaults().objectForKey("AllLogindetails") as? NSMutableDictionary)!
-        print(dictName)
         let fullname = dictName.objectForKey("fullName")
         var token = (fullname! as! String).componentsSeparatedByString(" ")
         let firstname = token[0]

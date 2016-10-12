@@ -33,9 +33,11 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         UITextField.appearance().tintColor = UIColor.blackColor()
         self.tabBarController?.delegate = self
         
-        searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
+        searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 300, height: 20))
         searchBar.backgroundColor = UIColor.clearColor()
         searchBar.placeholder = "Search Dish"
+        searchBar.tintColor = colorSlate
+        searchBar.keyboardType = UIKeyboardType.ASCIICapable
         
         self.navigationItem.titleView = searchBar
         searchBar.delegate = self
@@ -44,8 +46,8 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
         
         let textFieldInsideSearchBar = searchBar.valueForKey("searchField") as? UITextField
         
-        textFieldInsideSearchBar?.textColor = colorSnow
-        textFieldInsideSearchBar?.backgroundColor = UIColor.clearColor()
+        textFieldInsideSearchBar?.textColor = colorSlate
+        textFieldInsideSearchBar?.backgroundColor = UIColor.whiteColor()
         searchBar.becomeFirstResponder()
     }
     
@@ -66,7 +68,7 @@ class DishTagViewController: UIViewController, UITextFieldDelegate, UITableViewD
             
             isComingFromDishTag = true
             selectedRestaurantName = ""
-            restaurantId = ""
+            restaurantId = 0
         }
     }
     

@@ -279,10 +279,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
             }
             }
-//            let notificationType: UIUserNotificationType = [.Alert, .Badge, .Sound]
-//            let settings: UIUserNotificationSettings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
-//            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-//            UIApplication.sharedApplication().registerForRemoteNotifications()
         }
         
         Flurry.setCrashReportingEnabled(true)

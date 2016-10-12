@@ -158,14 +158,14 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
                     // some process
                     if viewController.isKindOfClass(OpenPostViewController) {
                         postIdOpenPost = notificationArray.objectAtIndex(indexPath.row).objectForKey("elementId") as! String
-                        print(postIdOpenPost)
+                        
                         self.navigationController?.visibleViewController?.navigationController?.popToViewController(viewController as! UIViewController, animated: true)
                         break
                     }
                 }
             }
             postIdOpenPost = notificationArray.objectAtIndex(indexPath.row).objectForKey("elementId") as! String
-            print(postIdOpenPost)
+            
             let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("OpenPost") as! OpenPostViewController;
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
             

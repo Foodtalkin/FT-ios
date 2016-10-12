@@ -11,8 +11,8 @@ import UIKit
 
 import SystemConfiguration
 
-//var baseUrl = "http://52.74.136.146/index.php/service/"
-  var baseUrl = "http://52.74.13.4/index.php/service/"
+    var baseUrl = "http://52.74.136.146/index.php/service/"
+//  var baseUrl = "http://52.74.13.4/index.php/service/"
 
 var conectivityMsg = UIView()
 
@@ -33,6 +33,7 @@ var controllerUsers = "user/"
 var controllerDish = "dish/"
 var controllerRestaurentReport = "restaurantReport/"
 var controllerBookmark = "bookmark/"
+var controllerSearch = "search/"
 
 
 var signinMethod = "signin"
@@ -200,6 +201,47 @@ func internetMsg(view : UIView){
     view.addSubview(conectivityMsg)
 }
 
+func internetMsgForCheckin(view : UIView){
+    conectivityMsg.frame = CGRectMake(0, 64, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height - 108)
+    conectivityMsg.tag = 112233
+    conectivityMsg.userInteractionEnabled = true
+    conectivityMsg.backgroundColor = UIColor.whiteColor()
+    
+    
+    let imgWifi = UIImageView()
+    imgWifi.frame = CGRectMake(UIScreen.mainScreen().bounds.size.width/2 - 24, conectivityMsg.frame.size.height/2 - 48, 48, 48)
+    imgWifi.image = UIImage(named: "dead.png")
+    conectivityMsg.addSubview(imgWifi)
+    
+    let lblMsg = UILabel()
+    lblMsg.frame = CGRectMake(50, imgWifi.frame.origin.y + imgWifi.frame.size.height, view.frame.size.width - 100, 20)
+    lblMsg.text = "Can't find restaurants."
+    lblMsg.font = UIFont(name : fontBold, size : 14)
+    lblMsg.textColor = UIColor.blackColor()
+    lblMsg.textAlignment = NSTextAlignment.Center
+    conectivityMsg.addSubview(lblMsg)
+    
+    let lblMsg1 = UILabel()
+    lblMsg1.frame = CGRectMake(50, lblMsg.frame.origin.y + lblMsg.frame.size.height, view.frame.size.width - 100, 20)
+    lblMsg1.text = "No internet connection."
+    lblMsg1.textColor = UIColor.grayColor()
+    lblMsg1.font = UIFont(name : fontName, size : 14)
+    lblMsg1.textAlignment = NSTextAlignment.Center
+    conectivityMsg.addSubview(lblMsg1)
+    
+    let lblMsg2 = UILabel()
+    lblMsg2.frame = CGRectMake(50, lblMsg1.frame.origin.y + lblMsg1.frame.size.height, view.frame.size.width - 100, 20)
+    lblMsg2.text = "Tap to retry."
+    lblMsg2.font = UIFont(name : fontName, size : 14)
+    lblMsg2.textColor = colorActive
+    lblMsg2.textAlignment = NSTextAlignment.Center
+    conectivityMsg.addSubview(lblMsg2)
+    
+    conectivityMsg.tag = 10990
+    
+    view.addSubview(conectivityMsg)
+}
+
 func differenceDate(dateString : String) -> String {
     
     let dateFormatter = NSDateFormatter()
@@ -237,7 +279,10 @@ func differenceDate(dateString : String) -> String {
     }
     else{
         
-       if(seconds < 60){
+        if(seconds < 10){
+            diffrenceDates = "Now"
+        }
+       else if(seconds < 60){
           let noOfseconds = seconds
           diffrenceDates = String(format: "%ds", noOfseconds)
        }

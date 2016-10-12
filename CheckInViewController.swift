@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import AVFoundation
 
-var restaurantId = String()
+var restaurantId = NSNumber()
 var selectedRestaurantName = String()
 var isRatedLater : Bool = false
 var imageSelected = UIImage()
@@ -23,7 +23,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     @IBOutlet var btnAddRestaurant : UIButton?
     var searchBar = UISearchBar()
     
-    var restaurentNameList = NSMutableArray()
+//    var restaurentNameList = NSMutableArray()
     var restaurantDetails = NSMutableArray()
     var filtered : NSArray = []
     var searchActive : Bool = false
@@ -55,6 +55,9 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     let stillImageOutput = AVCaptureStillImageOutput()
     var error: NSError?
     var imagePicker1 = UIImagePickerController()
+    var isLocationOn : Bool = false
+    
+    var myTimer : NSTimer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,13 +109,15 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         tableView!.tableFooterView = tblView
         tableView!.tableFooterView!.hidden = true
         
+        
         let textFieldInsideSearchBar = searchBar.valueForKey("searchField") as? UITextField
         
-        textFieldInsideSearchBar?.textColor = colorSnow
-        textFieldInsideSearchBar?.backgroundColor = UIColor.clearColor()
+        textFieldInsideSearchBar?.textColor = colorSlate
+        textFieldInsideSearchBar?.backgroundColor = UIColor.whiteColor()
         //
 
         self.tabBarController?.delegate = self
+         delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -211,18 +216,15 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         btnSettings.removeFromSuperview()
         btnSettings.hidden = true
         restaurantDetails = NSMutableArray()
-        restaurentNameList = NSMutableArray()
+ //       restaurentNameList = NSMutableArray()
         dispatch_async(dispatch_get_main_queue())  {
-            self.webServiceCallingForRestaurant()
+            self.webServiceForCheckinSearch()
         }
     }
     
     
     func backPressed(){
-//        isImageClicked = false
-//        self.tabBarController?.selectedIndex = 0
-//        self.tabBarController?.tabBar.hidden = false
-//        self.tabBarController?.tabBar.translucent = false
+
         self.navigationController?.popViewControllerAnimated(false)
     }
 
@@ -232,10 +234,20 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(searchActive) {
-            return filtered.count
+            if(isLocationOn){
+            return restaurantDetails.count
+            }
+            else{
+            return restaurantDetails.count + 1
+            }
         }
         else {
-            return restaurantDetails.count;
+            if(isLocationOn){
+                return restaurantDetails.count
+            }
+            else{
+                return restaurantDetails.count + 1
+            }
         }
     }
     
@@ -250,74 +262,135 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
         }
         cell?.backgroundColor = UIColor.whiteColor()
         cell?.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        dispatch_async(dispatch_get_main_queue()) {
-            let image = UIImageView()
-            image.frame = CGRect(x: 15, y: 17, width: 20, height: 20)
-            image.layer.cornerRadius = 10
-            image.layer.masksToBounds = true
-            image.userInteractionEnabled = true
-            image.image = UIImage(named: "restaurant_white.png")
-            image.backgroundColor = UIColor.lightGrayColor()
-            //   cell.contentView.addSubview(image)
+   //     dispatch_async(dispatch_get_main_queue()) {
             
             let labelText = UILabel()
             labelText.frame = CGRectMake(20, 5, UIScreen.mainScreen().bounds.size.width - 50, 23)
             labelText.textColor = colorBlack
-            labelText.tag = (indexPath as NSIndexPath).row
+            labelText.tag = 10990
             labelText.userInteractionEnabled = true
             labelText.font = UIFont(name : fontBold, size : 16)
-            let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(CheckInViewController.doubleTabMethod(_:)))
-            labelText.addGestureRecognizer(gestureRecognizer)
-            labelText.backgroundColor = UIColor.whiteColor()
-            cell?.contentView.addSubview(labelText)
+//            let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(CheckInViewController.doubleTabMethod(_:)))
+//            labelText.addGestureRecognizer(gestureRecognizer)
+            labelText.backgroundColor = UIColor.clearColor()
+    //        cell?.contentView.addSubview(labelText)
             
             let labelText1 = UILabel()
             labelText1.frame = CGRect(x: 20, y: 25, width: UIScreen.mainScreen().bounds.size.width - 50, height: 20)
             labelText1.textColor = UIColor.grayColor()
-            labelText1.backgroundColor = UIColor.whiteColor()
-            labelText1.tag = (indexPath as NSIndexPath).row
+            labelText1.backgroundColor = UIColor.clearColor()
+            labelText1.tag = 1234543
             labelText1.userInteractionEnabled = true
             labelText1.font = UIFont(name : fontName, size: 12)
-            let gestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(CheckInViewController.doubleTabMethod(_:)))
-            labelText1.addGestureRecognizer(gestureRecognizer1)
-            cell?.contentView.addSubview(labelText1)
+//            let gestureRecognizer1 = UITapGestureRecognizer(target: self, action: #selector(CheckInViewController.doubleTabMethod(_:)))
+//            labelText1.addGestureRecognizer(gestureRecognizer1)
+     //       cell?.contentView.addSubview(labelText1)
             
             if(self.searchActive){
-                if(self.filtered.count > 0){
-                    labelText.text = self.filtered.objectAtIndex(indexPath.row).objectForKey("restaurantName") as? String
-                    labelText1.text = self.filtered.objectAtIndex(indexPath.row).objectForKey("area") as? String
-                    if(self.filtered.objectAtIndex(indexPath.row).objectForKey("restaurantIsActive") as? String == "0"){
-                        labelText1.text = "unverified"
-                        labelText1.textColor = UIColor.redColor()
-                    }
-                }
-            } else {
                 if(self.restaurantDetails.count > 0){
-                    labelText.text = self.restaurantDetails[indexPath.row].objectForKey("restaurantName") as? String;
-                    labelText1.text = self.restaurantDetails[indexPath.row].objectForKey("area") as? String
+                    if(isLocationOn){
+                    labelText.text = (self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String
+                    labelText1.text = (self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("_source") as! NSDictionary).objectForKey("area") as? String
                     if(self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("restaurantIsActive") as? String == "0"){
                         labelText1.text = "unverified"
                         labelText1.textColor = UIColor.redColor()
                     }
+                    }
+                    else{
+                        if(indexPath.row == 0){
+                        cell.backgroundColor = colorWarning
+                        cell.textLabel?.text = "We use your location to find nearby places. Tap on this bar to turn on location."
+                        }
+                        else{
+                            labelText.text = ((self.restaurantDetails.objectAtIndex(indexPath.row - 1) as! NSDictionary).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String
+                            labelText1.text = ((self.restaurantDetails.objectAtIndex(indexPath.row - 1) as! NSDictionary).objectForKey("_source") as! NSDictionary).objectForKey("area") as? String
+                            if(self.restaurantDetails.objectAtIndex(indexPath.row - 1).objectForKey("restaurantIsActive") as? String == "0"){
+                                labelText1.text = "unverified"
+                                labelText1.textColor = UIColor.redColor()
+                            }
+
+                        }
+                    }
+                }
+            } else {
+                if(self.restaurantDetails.count > 0){
+                    if(isLocationOn){
+                        labelText.text = (self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String
+                        labelText1.text = (self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("_source") as! NSDictionary).objectForKey("area") as? String
+                        if(self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("restaurantIsActive") as? String == "0"){
+                            labelText1.text = "unverified"
+                            labelText1.textColor = UIColor.redColor()
+                        }
+                    }
+                    else{
+                        if(indexPath.row == 0){
+                            labelText.removeFromSuperview()
+                            labelText1.removeFromSuperview()
+                            cell.backgroundColor = colorWarning
+                            cell.textLabel?.text = "We use your location to find nearby places. Tap on this bar to turn on location."
+                            cell.textLabel?.font = UIFont(name: fontName, size: 12)
+                            cell.textLabel?.numberOfLines = 2
+                        }
+                        else{
+                          
+                            labelText.text = (self.restaurantDetails.objectAtIndex(indexPath.row - 1).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String
+                            labelText1.text = (self.restaurantDetails.objectAtIndex(indexPath.row - 1).objectForKey("_source") as! NSDictionary).objectForKey("area") as? String
+                            if(self.restaurantDetails.objectAtIndex(indexPath.row - 1).objectForKey("restaurantIsActive") as? String == "0"){
+                                labelText1.text = "unverified"
+                                labelText1.textColor = UIColor.redColor()
+                            }
+                        }
+                    }
                 }
             }
             cell.selectionStyle = UITableViewCellSelectionStyle.None
+        
+        if((cell.contentView.viewWithTag(10990)) != nil){
+            cell.contentView.viewWithTag(10990)?.removeFromSuperview()
+            cell.contentView.viewWithTag(1234543)?.removeFromSuperview()
+            
         }
+        
+        cell.contentView.addSubview(labelText)
+        cell.contentView.addSubview(labelText1)
+    //    }
         return cell
 
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if(searchActive){
-            if(self.filtered.count > 0){
-                restaurantId = filtered.objectAtIndex(indexPath.row).objectForKey("id") as! String
-                selectedRestaurantName = filtered.objectAtIndex(indexPath.row) .objectForKey("restaurantName") as! String
+            if(self.restaurantDetails.count > 0){
+                if(isLocationOn){
+                restaurantId = ((self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("_source") as! NSDictionary).objectForKey("id") as? NSNumber)!
+                selectedRestaurantName = ((self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String)!
+                }
+                else{
+                    if(indexPath.row != 0){
+                    restaurantId = ((self.restaurantDetails.objectAtIndex(indexPath.row - 1).objectForKey("_source") as! NSDictionary).objectForKey("id") as? NSNumber)!
+                    selectedRestaurantName = ((self.restaurantDetails.objectAtIndex(indexPath.row - 1).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String)!
+                    }
+                    else{
+                        openSettings()
+                    }
+                }
             }
         }
         else{
             if(self.restaurantDetails.count > 0){
-                restaurantId = restaurantDetails.objectAtIndex(indexPath.row) .objectForKey("id") as! String
-                selectedRestaurantName = restaurantDetails.objectAtIndex(indexPath .row).objectForKey("restaurantName") as! String
+                if(isLocationOn){
+                    restaurantId = ((self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("_source") as! NSDictionary).objectForKey("id") as? NSNumber)!
+                    selectedRestaurantName = ((self.restaurantDetails.objectAtIndex(indexPath.row).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String)!
+                }
+                else{
+                    if(indexPath.row != 0){
+                        restaurantId = ((self.restaurantDetails.objectAtIndex(indexPath.row - 1).objectForKey("_source") as! NSDictionary).objectForKey("id") as? NSNumber)!
+                        selectedRestaurantName = ((self.restaurantDetails.objectAtIndex(indexPath.row - 1).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String)!
+                    }
+                    else{
+                        openSettings()
+                    }
+                }
             }
         }
         
@@ -333,13 +406,41 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     func doubleTabMethod(sender : UITapGestureRecognizer){
         
         if(searchActive){
-            restaurantId = filtered.objectAtIndex((sender.view?.tag)!).objectForKey("id") as! String
-            selectedRestaurantName = filtered.objectAtIndex((sender.view?.tag)!).objectForKey("restaurantName") as! String
+            if(self.restaurantDetails.count > 0){
+                if(isLocationOn){
+                    restaurantId = ((self.restaurantDetails.objectAtIndex((sender.view?.tag)!).objectForKey("_source") as! NSDictionary).objectForKey("id") as? NSNumber)!
+                    selectedRestaurantName = ((self.restaurantDetails.objectAtIndex((sender.view?.tag)!).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String)!
+                }
+                else{
+                    if((sender.view?.tag)! != 0){
+                        restaurantId = ((self.restaurantDetails.objectAtIndex((sender.view?.tag)! - 1).objectForKey("_source") as! NSDictionary).objectForKey("id") as? NSNumber)!
+                        selectedRestaurantName = ((self.restaurantDetails.objectAtIndex((sender.view?.tag)! - 1).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String)!
+                    }
+                    else{
+                        openSettings()
+                    }
+                }
+            }
         }
         else{
-            restaurantId = restaurantDetails.objectAtIndex((sender.view?.tag)!).objectForKey("id") as! String
-            selectedRestaurantName = restaurantDetails.objectAtIndex((sender.view?.tag)!).objectForKey("restaurantName") as! String
+            if(self.restaurantDetails.count > 0){
+                if(isLocationOn){
+                   
+                    restaurantId = ((self.restaurantDetails.objectAtIndex((sender.view?.tag)!).objectForKey("_source") as! NSDictionary).objectForKey("id") as? NSNumber)!
+                    selectedRestaurantName = ((self.restaurantDetails.objectAtIndex((sender.view?.tag)!).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String)!
+                }
+                else{
+                    if((sender.view?.tag)! != 0){
+                        restaurantId = ((self.restaurantDetails.objectAtIndex((sender.view?.tag)! - 1).objectForKey("_source") as! NSDictionary).objectForKey("id") as? NSNumber)!
+                        selectedRestaurantName = ((self.restaurantDetails.objectAtIndex((sender.view?.tag)! - 1).objectForKey("_source") as! NSDictionary).objectForKey("restaurantname") as? String)!
+                    }
+                    else{
+                        openSettings()
+                    }
+                }
+            }
         }
+
         
         //        self.performSelector(#selector(CheckInViewController.openPost), withObject: nil, afterDelay: 0.0)
         isRestaurantSelect = true
@@ -371,76 +472,104 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         
+
         
-        let searchPredicate = NSPredicate(format: "restaurantName CONTAINS[cd] %@", searchText)
-        let array = (self.restaurantDetails).filteredArrayUsingPredicate(searchPredicate)
-        //       filtered = array as! [String]
-        
-        self.filtered = []
-        self.filtered = array as NSArray
-        
-        if(searchBar.text?.characters.count < 1){
-            self.searchActive = false;
-            self.btnAddRestaurant?.frame = CGRectMake(0, self.view.frame.size.height - 40, (self.btnAddRestaurant?.frame.size.width)!, (self.btnAddRestaurant?.frame.size.height)!)
-        }
-        else{
-            if(self.filtered.count == 0){
-                self.searchActive = true;
-                self.btnAddRestaurant?.frame = CGRect(x: 0, y: self.view.frame.size.height - 216 - 52, width: (self.btnAddRestaurant?.frame.size.width)!, height: (self.btnAddRestaurant?.frame.size.height)!)
-            } else {
-                if(self.filtered.count == 1){
-                    self.btnAddRestaurant?.frame = CGRect(x: 0, y: self.view.frame.size.height - 216 - 52, width: (self.btnAddRestaurant?.frame.size.width)!, height: (self.btnAddRestaurant?.frame.size.height)!)
+        var str = NSString()
+        str = searchBar.text!
+        if(str.length > 0){
+            self.restaurantDetails = []
+            tableView?.reloadData()
+           
+            searchingLabel.text = "Searching.."
+            activityIndicator.hidden = false
+            if(searchBar.text != ""){
+                loaderView.hidden = false
+            //    self.tableView?.userInteractionEnabled = false
+                
+                if (myTimer != nil) {
+                    if ((myTimer?.valid) != nil)
+                    {
+                        myTimer!.invalidate();
+                    }
+                    myTimer = nil;
                 }
-                else if(self.filtered.count == 2){
-                    self.btnAddRestaurant?.frame = CGRect(x: 0, y: self.view.frame.size.height - 216 - 52, width: (self.btnAddRestaurant?.frame.size.width)!, height: (self.btnAddRestaurant?.frame.size.height)!)
-                }
-                else if(self.filtered.count == 3){
-                    self.btnAddRestaurant?.frame = CGRect(x: 0, y: self.view.frame.size.height - 216 - 52, width: (self.btnAddRestaurant?.frame.size.width)!, height: (self.btnAddRestaurant?.frame.size.height)!)
-                }
-                else if(self.filtered.count == 4){
-                    self.btnAddRestaurant?.frame = CGRect(x: 0, y: self.view.frame.size.height - 216 - 52, width: (self.btnAddRestaurant?.frame.size.width)!, height: (self.btnAddRestaurant?.frame.size.height)!)
-                }
-                    
-                else{
-                    self.btnAddRestaurant?.frame = CGRect(x: 0, y: self.view.frame.size.height - 40, width: (self.btnAddRestaurant?.frame.size.width)!, height: (self.btnAddRestaurant?.frame.size.height)!)
-                }
-                self.searchActive = true;
+                cancelRequest()
+                myTimer = NSTimer.scheduledTimerWithTimeInterval(0.20, target: self, selector: #selector(CheckInViewController.webServiceForCheckinSearch1(_:)), userInfo: searchText, repeats: false)
+            }
+            else{
+                cancelRequest()
+                myTimer?.invalidate()
+                self.restaurantDetails = []
+                activityIndicator.hidden = true
+                loaderView.hidden = true
+                tableView?.reloadData()
             }
         }
-        
-        self.tableView!.reloadData()
+        else{
+            cancelRequest()
+            myTimer?.invalidate()
+            self.restaurantDetails = []
+            activityIndicator.hidden = true
+            loaderView.hidden = true
+            tableView?.reloadData()
+        }
+
         
     }
 
     //MARK:- WebServiceCalling & Delegates
-        
     
-        
-    func webServiceCallingForRestaurant(){
+    func webServiceForCheckinSearch1(timer : NSTimer){
         if (isConnectedToNetwork()){
-            
-            
-            let url = String(format: "%@%@%@", baseUrl, controllerRestaurant, searchListMethod)
+            let url = String(format: "%@%@%@", baseUrl, controllerSearch, "es")
             let sessionId = NSUserDefaults.standardUserDefaults().objectForKey("sessionId")
-            let userId = NSUserDefaults.standardUserDefaults().objectForKey("userId")
-            
+    
             let params = NSMutableDictionary()
-            
             params.setObject(sessionId!, forKey: "sessionId")
-            params.setObject(userId!, forKey: "selectedUserId")
-            params.setObject(self.locationVal!.valueForKey("latitude") as! NSNumber, forKey: "latitude")
-            params.setObject(self.locationVal!.valueForKey("longitute") as! NSNumber, forKey: "longitude")
+            params.setObject("restaurant", forKey: "type")
+            let searchText = (timer.userInfo as! String).lowercaseString
+            
+            params.setObject(searchText, forKey: "searchText")
             
             webServiceCallingPost(url, parameters: params)
-           
+            
             delegate = self
             
         }
         else{
-            internetMsg(view)
+            internetMsgForCheckin(self.view)
             stopLoading1(self.view)
         }
     }
+    
+    func webServiceForCheckinSearch(){
+        if (isConnectedToNetwork()){
+            
+            
+            let url = String(format: "%@%@%@", baseUrl, controllerSearch, "es")
+            let sessionId = NSUserDefaults.standardUserDefaults().objectForKey("sessionId")
+            
+            let params = NSMutableDictionary()
+            
+            params.setObject(sessionId!, forKey: "sessionId")
+            params.setObject("restaurant", forKey: "type")
+            
+            if(isLocationOn == true){
+            params.setObject(self.locationVal!.valueForKey("latitude") as! NSNumber, forKey: "latitude")
+            params.setObject(self.locationVal!.valueForKey("longitute") as! NSNumber, forKey: "longitude")
+            }
+             
+            webServiceCallingPost(url, parameters: params)
+            
+            delegate = self
+            
+        }
+        else{
+            internetMsgForCheckin(view)
+            stopLoading1(self.view)
+        }
+    }
+    
     
     func getDataFromWebService(dict : NSMutableDictionary){
         
@@ -449,8 +578,8 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
             if((dict.objectForKey("status")! as! String).isEqual("OK")){
             let arr = dict.objectForKey("restaurants") as! NSArray
             for index : Int in 0 ..< arr.count {
-                self.restaurentNameList.addObject(arr.objectAtIndex(index).objectForKey("restaurantName") as! String)
-                self.restaurantDetails.addObject(arr.objectAtIndex(index))
+                //self.restaurentNameList.addObject(arr.objectAtIndex(index).objectForKey("restaurantname") as! String)
+                self.restaurantDetails.addObject(arr.objectAtIndex(index) as! NSDictionary)
             }
                
             }
@@ -480,9 +609,50 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
             stopLoading(self.view)
         
         }
+        else if(dict.objectForKey("api") as! String == "Search/es"){
+            self.restaurantDetails.removeAllObjects()
+        
+            if((dict.objectForKey("status")! as! String).isEqual("OK")){
+                
+                let arr = ((dict.objectForKey("result") as! NSDictionary).objectForKey("hits") as! NSDictionary).objectForKey("hits") as! NSArray
+                if(arr.count > 0){
+                    removePlace()
+                for index : Int in 0 ..< arr.count {
+                
+                    self.restaurantDetails.addObject(arr.objectAtIndex(index) as! NSDictionary)
+                }
+                }
+                else{
+                   placeHolderNoRestaurants()
+                }
+            }
+            else if((dict.objectForKey("status")! as! String).isEqual("error")){
+                if((dict.objectForKey("errorCode")! as! NSNumber).isEqual(6)){
+                    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "sessionId")
+                    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "userId")
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    
+                    let nav = (self.navigationController?.viewControllers)! as NSArray
+                    if(!(nav.objectAtIndex(0) as! UIViewController).isKindOfClass(LoginViewController)){
+                        for viewController in nav {
+                            if (viewController as! UIViewController).isKindOfClass(LoginViewController) {
+                                self.navigationController?.visibleViewController?.navigationController?.popToViewController(viewController as! UIViewController, animated: true)
+                                break
+                            }
+                        }
+                    }
+                    let openPost = self.storyboard!.instantiateInitialViewController() as! LoginViewController;
+                    self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
+                }
+                
+            }
+            loaderView.hidden = true
+            self.tableView?.reloadData()
+            stopLoading(self.view)
+        }
     
     
-    if(restaurentNameList.count > 0){
+    if(restaurantDetails.count > 0){
     loaderView.hidden = true
     }
     else{
@@ -490,7 +660,7 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     }
     btnSettings.hidden = true
     self.refreshControl.endRefreshing()
-    
+    self.tableView?.reloadData()
    }
 
     func serviceFailedWitherror(error : NSError){
@@ -532,7 +702,8 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
                 );
             }
             dispatch_async(dispatch_get_main_queue()){
-                self.webServiceCallingForRestaurant()
+                self.isLocationOn = true
+                self.webServiceForCheckinSearch()
             }
         }
         callInt += 1
@@ -544,15 +715,18 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         if (status == CLAuthorizationStatus.Denied) {
-            
+            isLocationOn = false
                refreshControl.removeFromSuperview()
-                self.searchingLabel.text = "Please enable location services in your privacy settings to post or press skip"
-                self.activityIndicator1.stopAnimating()
-                self.btnSettings.hidden = false
-                self.dismissViewControllerAnimated(true, completion: nil)
+//                self.searchingLabel.text = "Please enable location services in your privacy settings to post or press skip"
+//                self.activityIndicator1.stopAnimating()
+//                self.btnSettings.hidden = false
+//                self.dismissViewControllerAnimated(true, completion: nil)
+            
+            self.webServiceForCheckinSearch()
 
             
         } else if (status == CLAuthorizationStatus.AuthorizedAlways) {
+            isLocationOn = true
             self.refreshControl.addTarget(self, action: #selector(CheckInViewController.refresh(_:)), forControlEvents: UIControlEvents.ValueChanged)
             self.tableView!.addSubview(refreshControl)
         }
@@ -579,6 +753,66 @@ class CheckInViewController: UIViewController, UISearchBarDelegate, UITableViewD
                 }
             }
         }
+    }
+    
+    func placeHolderNoRestaurants(){
+        let viewPlaceHolder = UIView()
+        viewPlaceHolder.frame = CGRectMake(0, 100, self.view.frame.size.width, 350)
+        viewPlaceHolder.tag = 1234523
+        
+        let imgPlace = UIImageView()
+        imgPlace.frame = CGRectMake(self.view.frame.size.width/2 - 24, 10, 48, 48)
+        imgPlace.image = UIImage(named : "crying-1.png")
+        viewPlaceHolder.addSubview(imgPlace)
+        
+        let lblAlert = UILabel()
+        lblAlert.frame = CGRectMake(20, imgPlace.frame.origin.y + imgPlace.frame.size.height + 10, self.view.frame.size.width - 40, 20)
+        lblAlert.text = "Can't find this restaurant."
+        lblAlert.textColor = UIColor.blackColor()
+        lblAlert.textAlignment = NSTextAlignment.Center
+        lblAlert.font = UIFont(name : fontName, size: 14)
+        viewPlaceHolder.addSubview(lblAlert)
+        
+//        let lblAlert1 = UILabel()
+//        lblAlert1.frame = CGRectMake(20, lblAlert.frame.origin.y + lblAlert.frame.size.height + 10, self.view.frame.size.width - 40, 20)
+//        lblAlert1.text = String(format : "You can add \"%@\" to FoodTalk", searchBar.text!)
+//        lblAlert1.textColor = colorActive
+//        lblAlert1.textAlignment = NSTextAlignment.Center
+//        lblAlert1.font = UIFont(name : fontName, size: 14)
+//        viewPlaceHolder.addSubview(lblAlert1)
+        
+        let btnSettings1 = UIButton()
+        btnSettings1.frame = CGRectMake(20, lblAlert.frame.origin.y + lblAlert.frame.size.height + 10, self.view.frame.size.width - 40, 20)
+        btnSettings1.setTitle(String(format : "You can add \"%@\" to FoodTalk", searchBar.text!), forState: UIControlState.Normal)
+        btnSettings1.addTarget(self, action: #selector(CheckInViewController.forward), forControlEvents: UIControlEvents.TouchUpInside)
+        btnSettings1.setTitleColor(colorActive, forState: UIControlState.Normal)
+        viewPlaceHolder.addSubview(btnSettings1)
+        
+        self.view.addSubview(viewPlaceHolder)
+        
+        let btnSettings = UIButton()
+        btnSettings.frame = CGRectMake(0, self.view.frame.size.height - 256, self.view.frame.size.width, 40)
+        btnSettings.setTitle("Skip checkin", forState: UIControlState.Normal)
+        btnSettings.addTarget(self, action: #selector(CheckInViewController.skipCheckin), forControlEvents: UIControlEvents.TouchUpInside)
+        btnSettings.setTitleColor(colorActive, forState: UIControlState.Normal)
+        self.view.addSubview(btnSettings)
+    }
+    
+    func removePlace(){
+        for var view : UIView in self.view.subviews {
+            if(view.tag == 1234523){
+                view.removeFromSuperview()
+            }
+        }
+    }
+    
+    func forward(){
+        let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("AddRestaurant") as! AddRestaurantViewController;
+        self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
+    }
+    
+    func skipCheckin(){
+        self.navigationController?.popViewControllerAnimated(true)
     }
 
    

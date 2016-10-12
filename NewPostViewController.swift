@@ -56,7 +56,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         let button: UIButton = UIButton(type: UIButtonType.Custom)
         button.setImage(UIImage(named: "Back icon.png"), forState: UIControlState())
         button.addTarget(self, action: #selector(NewPostViewController.backPressed), forControlEvents: UIControlEvents.TouchUpInside)
-        button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        button.frame = CGRect(x: -20, y: 0, width: 30, height: 30)
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.leftBarButtonItem = barButton
         
@@ -70,7 +70,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         if(isImageClicked == false){
             selectedRestaurantName = ""
             dishNameSelected = ""
-            restaurantId = ""
+            restaurantId = 0
             imgDish?.image = UIImage(named: "placeholder.png")
             btnAddDish?.setTitle("Add a dish", forState: UIControlState.Normal)
             btnRestaurant?.setTitle("Checkin", forState: UIControlState.Normal)
@@ -123,7 +123,10 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         viewFullImage.frame = CGRectMake(imgDish!.frame.origin.x + imgDish!.frame.size.width/2, imgDish!.frame.origin.y + imgDish!.frame.size.height/2, 1, 1)
         viewFullImage.userInteractionEnabled = true
         viewFullImage.backgroundColor = UIColor.clearColor()
-        self.view.addSubview(viewFullImage)
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.window!.addSubview(viewFullImage)
+    //    UIApplication.sharedApplication().keyWindow!.addSubview(viewFullImage)
         
         let blurEffect1 = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         let blurEffectView1 = UIVisualEffectView(effect: blurEffect1)
@@ -389,7 +392,9 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
             textView.resignFirstResponder()
             return false
         }
-        return true
+       
+        return textView.text.characters.count + (text.characters.count - range.length) <= 200;
+        
     }
     
     //MARK:- sharePostMethod
