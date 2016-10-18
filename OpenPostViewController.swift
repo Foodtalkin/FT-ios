@@ -127,7 +127,7 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
         
         
         dispatch_async(dispatch_get_main_queue()) {
-            print("function Called friendList")
+            
         self.webServiceForFriendList()
         }
         
@@ -323,40 +323,52 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
             cell.imageProfilePicture?.layer.masksToBounds = true
                 
                 
-//                var status = String(format: "%@ is having %@ at %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
-//                
-//                let lengthRestaurantname = (dictInfoPost.objectForKey("restaurantName") as! String).characters.count
-//                
-//                if(lengthRestaurantname < 1){
-//                    status = String(format: "%@ is having %@ %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
-//                }
-//                else{
-//                   status = String(format: "%@ is having %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("restaurantRegion") as! String)
-//                }
-                
                 var status = ""
                 var lengthRestaurantname = 0
                 lengthRestaurantname = (dictInfoPost.objectForKey("restaurantName") as! String).characters.count
                 var lengthRegion = 0
-                if((dictInfoPost.objectForKey("region")) != nil){
-                lengthRegion = (dictInfoPost.objectForKey("region") as! String).characters.count
+                if((dictInfoPost.objectForKey("cityName")) is NSNull){
+                    
+                }
+                else{
+                lengthRegion = (dictInfoPost.objectForKey("cityName") as! String).characters.count
                 }
                 if(dictInfoPost.count > 0){
                     if(lengthRestaurantname > 1){
                         if(lengthRegion > 1){
-                            status = String(format: "%@ is having %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("region") as! String)
+                            if(dictInfoPost.objectForKey("userName") as! String == "foodtalk" || dictInfoPost.objectForKey("userName") as! String == "grubguide"){
+                                status = String(format: "%@ recommends %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("cityName") as! String)
+                            }
+                            else{
+                            status = String(format: "%@ is having %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("cityName") as! String)
+                            }
                         }
                         else{
+                            if(dictInfoPost.objectForKey("userName") as! String == "foodtalk" || dictInfoPost.objectForKey("userName") as! String == "grubguide"){
+                                status = String(format: "%@ recommends %@ at %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
+                            }
+                            else{
                             status = String(format: "%@ is having %@ at %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String)
+                            }
                         }
                     }
                     
                     if(lengthRestaurantname < 1){
                         if(lengthRegion > 1){
-                            status = String(format: "%@ is having %@ %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String, dictInfoPost.objectForKey("region") as! String)
+                            if(dictInfoPost.objectForKey("userName") as! String == "foodtalk" || dictInfoPost.objectForKey("userName") as! String == "grubguide"){
+                                status = String(format: "%@ recommends %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                            }
+                            else{
+                            status = String(format: "%@ is having %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                            }
                         }
                         else{
+                            if(dictInfoPost.objectForKey("userName") as! String == "foodtalk" || dictInfoPost.objectForKey("userName") as! String == "grubguide"){
+                                status = String(format: "%@ recommends %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                            }
+                            else{
                             status = String(format: "%@ is having %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                            }
                         }
                     }
                     
@@ -380,32 +392,30 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
                 let url1 = NSURL(string: "action://dish/\(trimmedString)")!
                 cell.labelStatus!.addLinkToURL(url1, withRange: range1)
                 
-//                if(dictInfoPost.objectForKey("restaurantIsActive") as! String == "1"){
-//                cell.labelStatus?.attributedTruncationToken = NSAttributedString(string: dictInfoPost.objectForKey("restaurantName") as! String, attributes: nil)
-//                let nsString2 = status as NSString
-//                let range2 = nsString2.rangeOfString(dictInfoPost.objectForKey("restaurantName") as! String)
-//                let trimmedString1 = "restaurantName"
-//                let url2 = NSURL(string: "action://restaurant/\(trimmedString1)")!
-//                cell.labelStatus!.addLinkToURL(url2, withRange: range2)
-//            }
                 
                 
                 if(dictInfoPost.objectForKey("restaurantIsActive") as! String == "1"){
                     
-                    cell.labelStatus?.attributedTruncationToken = NSAttributedString(string: (dictInfoPost.objectForKey("restaurantName") as? String)!, attributes: nil)
-                    let nsString2 = status as NSString
-                    let length1 = nsString2.length
-                    let length2 = (dictInfoPost.objectForKey("restaurantName") as? String)?.characters.count
-                    //  let range2 = NSRange(location: length1 - length2!, length: length2!)
-                    let city = dictInfoPost.objectForKey("region") as! String
+                    
+                
+                    var city = ""
+                    if(dictInfoPost.objectForKey("cityName") is NSNull){
+                        
+                    }
+                    else{
+                    city = dictInfoPost.objectForKey("cityName") as! String
+                    }
                     
                     var str1 = String()
                     if(city.characters.count > 0){
-                        str1   = String(format: "%@, %@", dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("region") as! String)
+                        str1   = String(format: "%@, %@", dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("cityName") as! String)
                     }
                     else{
                         str1   = String(format: "%@", dictInfoPost.objectForKey("restaurantName") as! String)
                     }
+                    
+                    cell.labelStatus?.attributedTruncationToken = NSAttributedString(string: str1, attributes: nil)
+                    
                     let range2 = nsString1.rangeOfString(str1)
                     
                     let trimmedString1 = "restaurantName"
@@ -976,11 +986,21 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
             lengthRestaurantname = (dictInfoPost.objectForKey("restaurantName") as! String).characters.count
             if(dictInfoPost.count > 0){
                 if(lengthRestaurantname > 1){
+                    if(dictInfoPost.objectForKey("userName") as! String == "foodtalk" || dictInfoPost.objectForKey("userName") as! String == "grubguide"){
+                        status = String(format: "%@ recommends %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("restaurantRegion") as! String)
+                    }
+                    else{
                     status = String(format: "%@ is having %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("restaurantRegion") as! String)
+                    }
                 }
                 
                 if(lengthRestaurantname < 1){
+                    if(dictInfoPost.objectForKey("userName") as! String == "foodtalk" || dictInfoPost.objectForKey("userName") as! String == "grubguide"){
+                        status = String(format: "%@ recommends %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                    }
+                    else{
                     status = String(format: "%@ is having %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                    }
                 }
                 labelText.text = status
                 labelText.sizeToFit()
@@ -1014,11 +1034,21 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
             lengthRestaurantname = (dictInfoPost.objectForKey("restaurantName") as! String).characters.count
             if(dictInfoPost.count > 0){
                 if(lengthRestaurantname > 1){
+                    if(dictInfoPost.objectForKey("userName") as! String == "foodtalk" || dictInfoPost.objectForKey("userName") as! String == "grubguide"){
+                        status = String(format: "%@ recommends %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("restaurantRegion") as! String)
+                    }
+                    else{
                     status = String(format: "%@ is having %@ at %@, %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String,dictInfoPost.objectForKey("restaurantName") as! String, dictInfoPost.objectForKey("restaurantRegion") as! String)
+                    }
                 }
                 
                 if(lengthRestaurantname < 1){
+                    if(dictInfoPost.objectForKey("userName") as! String == "foodtalk" || dictInfoPost.objectForKey("userName") as! String == "grubguide"){
+                        status = String(format: "%@ recommends %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                    }
+                    else{
                     status = String(format: "%@ is having %@", dictInfoPost.objectForKey("userName") as! String,dictInfoPost.objectForKey("dishName") as! String)
+                    }
                 }
                 labelText.text = status
                 labelText.sizeToFit()
@@ -1283,7 +1313,7 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
         viewBottom.removeFromSuperview()
         viewBottom = UIView()
             if(UIScreen.mainScreen().bounds.size.height < 570){
-                print("cell height",cell.contentView.frame.size.height)
+               
         viewBottom.frame = CGRectMake(0, cell.imageDishPost!.frame.origin.y + self.view.frame.size.width, UIScreen.mainScreen().bounds.size.width, 40)
             }
             else{
@@ -1756,7 +1786,7 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
         }
             
         else if(dict.objectForKey("api") as! String == "follower/listFollowed"){
-            print("response came of friendList")
+           
             if(dict.objectForKey("status") as! String == "OK"){
                userFriendsList = dict.objectForKey("followedUsers") as! NSArray
             }
@@ -1780,7 +1810,6 @@ class OpenPostViewController: UIViewController, UITableViewDataSource, UITableVi
         }
             
         else if(dict.objectForKey("api") as! String == "post/get"){
-            
             if(dict.objectForKey("status") as! String == "OK"){
                
                 dictInfoPost = dict.objectForKey("post") as! NSDictionary

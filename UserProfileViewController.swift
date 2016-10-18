@@ -523,32 +523,14 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         params.setObject(followedUserId, forKey: "selectedUserId")
         params.setObject("1", forKey: "page")
         params.setObject("10", forKey: "recordCount")
-//        params.setObject(dictLocations.valueForKey("latitude") as! NSNumber, forKey: "latitude")
-//        params.setObject(dictLocations.valueForKey("longitute") as! NSNumber, forKey: "longitude")
+
             webServiceCallingPost(url, parameters: params)
         delegate = self
         }
         else{
             internetMsg(view)
         }
-//        }
-//        else{
-//            let alertController = UIAlertController(
-//                title: "Location Disabled",
-//                message: "Please enable Location Services in your iPhone Setting to share photos of dishes and where to find them on FoodTalk.'",
-//                preferredStyle: .Alert)
-//            
-//            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-//            alertController.addAction(cancelAction)
-//            
-//            let openAction = UIAlertAction(title: "Settings", style: .Default) { (action) in
-//                if let url = NSURL(string: UIApplicationOpenSettingsURLString) {
-//                    UIApplication.sharedApplication().openURL(url)
-//                }
-//            }
-//            alertController.addAction(openAction)
-//            self.presentViewController(alertController, animated: true, completion: nil)
-//        }
+
     }
     
     
@@ -676,20 +658,6 @@ class UserProfileViewController: UIViewController, UITableViewDataSource, UITabl
         else if(dict.objectForKey("api") as! String == "user/getProfile"){
             if(dict.objectForKey("status") as! String == "OK"){
                 
-//                let numberFormatter = NSNumberFormatter()
-//                let number = numberFormatter.numberFromString((dict.objectForKey("profile")?.objectForKey("score") as? String)!)
-//                let numberFloatValue = number!.floatValue
-//                
-//                let f = numberFloatValue
-//                let y = Int(f)
-//                
-//                if(y == 0 || y == 1){
-//                firstLabel.text = String(format: "%d Point", y)
-//                }
-//                else{
-//                firstLabel.text = String(format: "%d Points", y)
-//                }
-//                pointsTap = y
                 
                  arrValues = dict.objectForKey("imagePosts")?.mutableCopy() as! NSMutableArray
                 

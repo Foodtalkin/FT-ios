@@ -29,6 +29,8 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
     var viewFullImage = UIView()
     var fullImage = String()
     var isFullPressed = Bool()
+    
+    var currentDeviceOrientation: UIDeviceOrientation = .Unknown
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,9 +62,48 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.leftBarButtonItem = barButton
         
+      UIDevice.currentDevice().setValue(UIInterfaceOrientation.Portrait.rawValue, forKey: "orientation")
+        
         imgDish?.userInteractionEnabled = true
         isFullPressed = false
         imageEnlargeSetting()
+        
+        let cameraMediaType = AVMediaTypeVideo
+        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatusForMediaType(cameraMediaType)
+        
+        switch cameraAuthorizationStatus {
+        case .Denied: break
+        case .Authorized: break
+        case .Restricted: break
+            
+        case .NotDetermined:
+            // Prompting user for the permission to use the camera.
+            AVCaptureDevice.requestAccessForMediaType(cameraMediaType) { granted in
+                if granted {
+                    print("Granted access to \(cameraMediaType)")
+                } else {
+                    print("Denied access to \(cameraMediaType)")
+                }
+            }
+        }
+    }
+    
+    override func shouldAutorotate() -> Bool {
+        // Lock autorotate
+        return false
+    }
+    
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        
+        
+        // Only allow Portrait
+        return UIInterfaceOrientationMask.Portrait
+    }
+    
+    override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+        
+        // Only allow Portrait
+        return UIInterfaceOrientation.Portrait
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -89,7 +130,11 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
                 isRestaurantSelect = false
             }
         }
+        
+       
     }
+    
+    
     
     func fitFloatRating(){
         self.floatRatingView.emptyImage = UIImage(named: "stars-02.png")
@@ -103,6 +148,11 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         self.floatRatingView.editable = true
         self.floatRatingView.halfRatings = false
         self.floatRatingView.floatRatings = false
+    }
+    
+    func deviceDidRotate(notification: NSNotification) {
+        self.currentDeviceOrientation = UIDevice.currentDevice().orientation
+        print(self.currentDeviceOrientation)
     }
     
     func backPressed(){
@@ -193,6 +243,7 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         }
     }
     
+    
     func addOnImagePicker(imagePicker : UIImagePickerController){
         let viewBlack = UIView()
         viewBlack.frame = CGRect(x: self.view.frame.size.width/2 - 45, y: self.view.frame.size.height - 85, width: self.view.frame.size.width/2 + 40, height: 85)
@@ -219,12 +270,14 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         imagePicker1 = imagePicker
         imagePicker1.delegate = self
         imagePicker1.allowsEditing = true
+        
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
         if let pickedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
             
+         //   let imgFinal = rotateImage(pickedImage)
             imageSelected = resizeImage(pickedImage)
             self.imgDish?.image = imageSelected
             isCameraCancel = false
@@ -232,8 +285,8 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
             isComingFromDishTag = false
             self.dismissViewControllerAnimated(true, completion: nil)
         }
-            
-        else if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        
+         else if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageSelected = resizeImage(pickedImage)
             self.imgDish?.image = imageSelected
             isCameraCancel = false
@@ -257,6 +310,12 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
     }
     
     func capture(sender : UIButton){
+        
+        if UIDevice.currentDevice().orientation.isLandscape.boolValue {
+            print("landscape")
+        } else {
+            print("portrait")
+        }
         
         imagePicker1.showsCameraControls = true
         imagePicker1.takePicture()
@@ -283,6 +342,15 @@ class NewPostViewController: UIViewController, UITextViewDelegate, FloatRatingVi
         btnGallary.tag = 101100
         viewBlack.addSubview(btnGallary)
         
+    }
+    
+    func rotateImage(image: UIImage) -> UIImage {
+        
+        
+        let portraitImage  : UIImage = UIImage(CGImage: image.CGImage! ,
+                                               scale: 1.0 ,
+                                               orientation: UIImageOrientation.Right)
+        return portraitImage
     }
     
     func retake(sender : UIButton){

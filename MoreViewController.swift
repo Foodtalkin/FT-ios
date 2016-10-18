@@ -28,6 +28,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         
         moreArray.addObject((dict.objectForKey("profile")?.objectForKey("userName") as? String)!)
+        moreArray.addObject("grubguide")
         moreArray.addObject("Store")
         moreArray.addObject("Delhi-NCR")
         moreArray.addObject("City Guide")
@@ -66,6 +67,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
     {
         moreArray = NSMutableArray()
         moreArray.addObject((dict.objectForKey("profile")?.objectForKey("userName") as? String)!)
+        moreArray.addObject("grubguide")
         moreArray.addObject("Store")
         moreArray.addObject("Delhi-NCR")
         moreArray.addObject("City Guide")
@@ -134,39 +136,45 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("UserProfile") as! UserProfileViewController;
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
         }
-        else if((indexPath as NSIndexPath).row == 1){
+        else if((indexPath as NSIndexPath).row == 2){
             
             let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("Store") as! StoreViewController;
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
         }
             
-        else if((indexPath as NSIndexPath).row == 3){
+        else if((indexPath as NSIndexPath).row == 4){
             
             isSuggestion = true
             let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("FoodTalkSuggestions") as! FoodTalkSuggestionsViewController;
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
             
         }
-        else if((indexPath as NSIndexPath).row == 4){
+        else if((indexPath as NSIndexPath).row == 5){
             
             
             let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("Favorite") as! FavoriteViewController;
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
             
         }
-        else if((indexPath as NSIndexPath).row == 2){
+        else if((indexPath as NSIndexPath).row == 3){
             
         }
-        else if((indexPath as NSIndexPath).row == 5){
+        else if((indexPath as NSIndexPath).row == 6){
             
             let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("FacebookFriends") as! FacebookFriendsViewController;
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
         }
-        else if((indexPath as NSIndexPath).row == 6){
+        else if((indexPath as NSIndexPath).row == 7){
             
             let openPost = self.storyboard!.instantiateViewControllerWithIdentifier( "Options") as! OptionsViewController;
             self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
             
+        }
+        else if((indexPath as NSIndexPath).row == 1){
+            isUserInfo = false
+            openProfileId = "3165"
+            let openPost = self.storyboard!.instantiateViewControllerWithIdentifier("UserProfile") as! UserProfileViewController;
+            self.navigationController!.visibleViewController!.navigationController!.pushViewController(openPost, animated:true);
         }
         else{
             if(isConnectedToNetwork()){
@@ -202,7 +210,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let imgBookMark = UIImageView()
             imgBookMark.tag = 232323
             
-            if(index == 2){
+            if(index == 3){
                 optionViewBook.frame = CGRect(x: 18, y: 9, width: 40, height: 40)
                 optionViewBook.backgroundColor = UIColor(red: 28/255, green: 103/255, blue: 204/255, alpha: 1.0)
                 optionViewBook.layer.cornerRadius = 20
@@ -213,7 +221,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 imgBookMark.image = UIImage(named: "location.png")
                 optionViewBook.addSubview(imgBookMark)
             }
-            else if(index == 3){
+            else if(index == 4){
                 
                 optionViewBook.frame = CGRect(x: 18, y: 9, width: 40, height: 40)
                 optionViewBook.backgroundColor = UIColor.redColor()
@@ -229,7 +237,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
                 optionViewBook.addSubview(imgBookMark)
             }
-            else if(index == 4){
+            else if(index == 5){
                 optionViewBook.frame = CGRect(x: 18, y: 9, width: 40, height: 40)
                 optionViewBook.backgroundColor = UIColor(red: 255/255, green: 253/255, blue: 10/255, alpha: 1.0)
                 optionViewBook.layer.cornerRadius = 20
@@ -240,7 +248,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 imgBookMark.image = UIImage(named: "bookmark (1).png")
                 optionViewBook.addSubview(imgBookMark)
             }
-            else if(index == 5){
+            else if(index == 6){
                 optionViewBook.frame = CGRect(x: 18, y: 9, width: 40, height: 40)
                 optionViewBook.backgroundColor = UIColor(red: 65/255, green: 87/255, blue: 148/255, alpha: 1.0)
                 optionViewBook.layer.cornerRadius = 20
@@ -251,7 +259,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 imgBookMark.image = UIImage(named: "fb-logo.png")
                 optionViewBook.addSubview(imgBookMark)
             }
-            else if(index == 6){
+            else if(index == 7){
                 
                 optionViewBook.frame = CGRect(x: 18, y: 9, width: 40, height: 40)
                 optionViewBook.backgroundColor = UIColor(red: 65/255, green: 87/255, blue: 148/255, alpha: 1.0)
@@ -263,7 +271,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 imgBookMark.image = UIImage(named: "settings.png")
                 optionViewBook.addSubview(imgBookMark)
             }
-            else if(index == 1){
+            else if(index == 2){
                 optionViewBook.frame = CGRect(x: 18, y: 9, width: 40, height: 40)
                 optionViewBook.backgroundColor = UIColor(red: 37/255, green: 203/255, blue: 207/255, alpha: 1.0)
                 optionViewBook.layer.cornerRadius = 20
@@ -274,8 +282,17 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 imgBookMark.image = UIImage(named: "store.png")
                 optionViewBook.addSubview(imgBookMark)
             }
-            
-            
+            else if(index == 1){
+                optionViewBook.frame = CGRect(x: 18, y: 9, width: 40, height: 40)
+                optionViewBook.backgroundColor = colorBlack
+                optionViewBook.layer.cornerRadius = 20
+                optionIcon.layer.masksToBounds = true
+                cell.contentView.addSubview(optionViewBook)
+                
+                imgBookMark.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+                imgBookMark.image = UIImage(named: "Asset 1mdp.png")
+                optionViewBook.addSubview(imgBookMark)
+            }
             
         }
         
@@ -303,7 +320,7 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let statuslabel = UILabel()
             statuslabel.tag = 3333
             statuslabel.frame = CGRectMake(74, 0, UIScreen.mainScreen().bounds.size.width - 128, 58)
-            if(index == 2){
+            if(index == 3){
                 if((dict.objectForKey( "profile")!.objectForKey("cityName")) != nil){
                     statuslabel.text = (dict.objectForKey("profile")!.objectForKey("cityName") as? String)
                 }
@@ -318,15 +335,15 @@ class MoreViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             statuslabel.numberOfLines = 0
             statuslabel.font = UIFont(name:fontName, size: 18.0)
-            if(index < 7){
-                if(index != 2){
+            if(index < 8){
+                if(index != 3){
                     statuslabel.text = moreArray.objectAtIndex(index) as? String
                 }
             }
             else{
                 if(moreArray.count > 0){
-                    if(moreArray.count > 5){
-                        statuslabel.text = moreArray.objectAtIndex(index).objectForKey("name") as? String
+                    if(moreArray.count > 6){
+                      //  statuslabel.text = moreArray.objectAtIndex(index).objectForKey("name") as? String
                     }
                 }
             }

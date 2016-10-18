@@ -290,6 +290,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         return true
     }
     
+    func application(application: UIApplication, supportedInterfaceOrientationsForWindow window: UIWindow?) -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.All
+    }
+    
     //MARK:- checkForNewVersion
     
     func newUpdates() -> Bool{
@@ -415,7 +419,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
             
             let dict = (userInfo as NSDictionary)
-            self.performSelector(#selector(AppDelegate.singleFunctionForNotification(_:)), withObject: dict, afterDelay: 2)
+            self.performSelector(#selector(AppDelegate.singleFunctionForNotification(_:)), withObject: dict, afterDelay: 4)
           //  singleFunctionForNotification(dict)
         }
         }

@@ -415,23 +415,49 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
             var lengthRestaurantname = 0
             lengthRestaurantname = (arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String).characters.count
             var lengthRegion = 0
-            lengthRegion = (arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String).characters.count
+            lengthRegion = (arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String).characters.count
             if(arrPostList.count > 0){
                 if(lengthRestaurantname > 1){
-                    if(lengthRegion > 1){
-        status = String(format: "%@ is having %@ at %@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String)
+                 if(lengthRegion > 1){
+                   if(arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "foodtalk" || arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "grubguide"){
+                    
+                        status = String(format: "%@ recommends %@ at %@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
+                        }
+                    
+                   else{
+                    
+        status = String(format: "%@ is having %@ at %@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
+                    }
                     }
                     else{
+                    
+                  if(arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "foodtalk" || arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "grubguide"){
+                    
+                       status = String(format: "%@ recommends %@ at %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String)
+                    }
+                    else{
+                    
                         status = String(format: "%@ is having %@ at %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String)
+                    }
                     }
                 }
                 
                 if(lengthRestaurantname < 1){
                     if(lengthRegion > 1){
-                    status = String(format: "%@ is having %@ %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String)
+                        if(arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "foodtalk" || arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "grubguide"){
+                            status = String(format: "%@ recommends %@ %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
+                        }
+                        else{
+                    status = String(format: "%@ is having %@ %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
+                        }
                     }
                     else{
-                       status = String(format: "%@ is having %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String) 
+                   if(arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "foodtalk" || arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "grubguide"){
+                            status = String(format: "%@ recommends %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String)
+                        }
+                        else{
+                       status = String(format: "%@ is having %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String)
+                        }
                     }
                 }
         cell.labelStatus?.text = status
@@ -506,11 +532,11 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
                     let length1 = nsString2.length
                     let length2 = (self.arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as? String)?.characters.count
               //  let range2 = NSRange(location: length1 - length2!, length: length2!)
-                    let city = arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String
+                    let city = arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String
                     
                     var str1 = String()
                     if(city.characters.count > 0){
-                     str1   = String(format: "%@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String)
+                     str1   = String(format: "%@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
                     }
                     else{
                      str1   = String(format: "%@", arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String)
@@ -648,11 +674,22 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
         lengthRestaurantname = (arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String).characters.count
         if(arrPostList.count > 0){
             if(lengthRestaurantname > 1){
-                status = String(format: "%@ is having %@ at %@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String)
+                if(arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "foodtalk" || arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "grubguide"){
+                    
+                    status = String(format: "%@ recommends %@ at %@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
+                }
+                else{
+                status = String(format: "%@ is having %@ at %@, %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("restaurantName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
+                }
             }
             
             if(lengthRestaurantname < 1){
-                status = String(format: "%@ is having %@ %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("region") as! String)
+                if(arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "foodtalk" || arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String == "grubguide"){
+                    status = String(format: "%@ recommends %@ %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
+                }
+                else{
+                status = String(format: "%@ is having %@ %@", arrPostList.objectAtIndex(indexPath.row).objectForKey("userName") as! String,arrPostList.objectAtIndex(indexPath.row).objectForKey("dishName") as! String, arrPostList.objectAtIndex(indexPath.row).objectForKey("cityName") as! String)
+                }
             }
             labelText.text = status
             labelText.sizeToFit()
@@ -1351,6 +1388,7 @@ class Home: UIViewController, UIActionSheetDelegate, UITableViewDataSource, UITa
     //MARK:- WebService Delegates
     
     func getDataFromWebService(dict : NSMutableDictionary){
+        
         if(dict.objectForKey("api") as! String == "post/list"){
          
         homeListInfo = dict

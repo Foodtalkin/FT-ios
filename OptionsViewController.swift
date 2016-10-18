@@ -44,7 +44,7 @@ class OptionsViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if(indexPath.row == 0){
             let switchO = UISwitch()
-            switchO.frame = CGRectMake(cell.frame.size.width - 60, 7, 60, 30)
+            switchO.frame = CGRectMake(self.view.frame.size.width - 45, 7, 40, 30)
             switchO.setOn(false, animated: true)
             switchO.backgroundColor = UIColor.clearColor()
             switchO.onTintColor = UIColor.blackColor()

@@ -126,8 +126,8 @@ class AddRestaurantViewController: UIViewController, UITextFieldDelegate, UIPick
             params.setObject(sessionId!, forKey: "sessionId")
             params.setObject(restaurantName!, forKey: "restaurantName")
             
-            if((txtAddress?.text?.characters.count)! > 0){
-                params.setObject((txtAddress?.text)!, forKey: "address")
+            if((txtAddress?.text?.characters.count) > 0){
+                params.setObject((txtAddress?.text)!, forKey: "area")
                 
             }
             params.setObject(googleId, forKey: "google_place_id" as NSCopying)
