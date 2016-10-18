@@ -103,8 +103,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             }
             else{
             
-            self.addLocationManager()
-            self.application(application, didReceiveRemoteNotification: remoteNotification as NSDictionary as [NSObject : AnyObject])
+//            self.addLocationManager()
+//            self.application(application, didReceiveRemoteNotification: remoteNotification as NSDictionary as [NSObject : AnyObject])
+                
+               
             
             FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
             NSUserDefaults.standardUserDefaults().setObject("98087765412342562728", forKey: "DeviceToken")
@@ -140,12 +142,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             if oldPushHandlerOnly || noPushPayload != nil {
                 PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
             }
+                
+                let dict = (remoteNotification as NSDictionary)
+                self.performSelector(#selector(AppDelegate.singleFunctionForNotification(_:)), withObject: dict, afterDelay: 2)
             }
             
-            let notificationType: UIUserNotificationType = [.Alert, .Badge, .Sound]
-            let settings: UIUserNotificationSettings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
-            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-            UIApplication.sharedApplication().registerForRemoteNotifications()
+//            let notificationType: UIUserNotificationType = [.Alert, .Badge, .Sound]
+//            let settings: UIUserNotificationSettings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
+//            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+//            UIApplication.sharedApplication().registerForRemoteNotifications()
         
         }
        else{
@@ -419,7 +424,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             
             
             let dict = (userInfo as NSDictionary)
-            self.performSelector(#selector(AppDelegate.singleFunctionForNotification(_:)), withObject: dict, afterDelay: 4)
+            self.performSelector(#selector(AppDelegate.singleFunctionForNotification(_:)), withObject: dict, afterDelay: 2)
           //  singleFunctionForNotification(dict)
         }
         }

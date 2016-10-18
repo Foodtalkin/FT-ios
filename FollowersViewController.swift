@@ -116,15 +116,15 @@ class FollowersViewController: UIViewController, UITableViewDataSource, UITableV
         
         stopLoading(self.view)
         if(dict.objectForKey("api") as! String == "follower/listFollowers"){
-            arrFollowers = dict.objectForKey("followers") as? NSMutableArray
+            arrFollowers = dict.objectForKey("followers")?.mutableCopy() as? NSMutableArray
         }
         else if(dict.objectForKey("api") as! String == "follower/listFollowed"){
-            arrFollowers = dict.objectForKey("followedUsers") as? NSMutableArray
+            arrFollowers = dict.objectForKey("followedUsers")?.mutableCopy() as? NSMutableArray
         }
         else if(dict.objectForKey("api") as! String == "user/getCheckIn"){
            // arrFollowers = dict.objectForKey("checkIn") as? NSMutableArray
             
-            let arr = dict.objectForKey("checkIn") as? NSMutableArray
+            let arr = dict.objectForKey("checkIn")?.mutableCopy() as? NSMutableArray
             if(arr?.count > 0){
             for(var index  = 0; index < arr!.count; index += 1){
                let dict1 = arr!.objectAtIndex(index) as! NSMutableDictionary
